@@ -3,7 +3,11 @@ var express = require('express'),
 
 // Get Default/Home Page
 router.get('/', function(request, response, next) {
-  response.render('index', { title: 'Resource Management' });
+    var viewModel = {
+        title: 'Welcome to Resource Management',
+        className: 'default'
+    };
+    response.render('index', viewModel);
 });
 
 module.exports = router;

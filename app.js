@@ -6,14 +6,33 @@ var express = require('express'),
     bodyParser = require('body-parser');
 
 // Application modules
-var index = require('./routes/index');
+var index = require('./routes/index'),
+    users = require('./routes/users');
 
 var app = express();
+app.locals.siteTitle = 'Resource Management';
+app.locals.siteDescription = 'A tool for managing organizational assets';
+app.locals.navigationItems = [
+    {
+        title: 'Users',
+        route: '/users'
+    },
+    {
+        title: 'view 2',
+        route: '/view2'
+    },
+    {
+        title: 'view 3',
+        route: '/view3'
+    }
+];
+app.locals.userName;
 
-// view engine setup
+// View engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.set('view engine', 'hbs');
 
+// Plugin Setup
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -22,6 +41,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
 app.use('/', index);
+app.use('/users', users);
 
 // Catch 404 and forward to error handler
 app.use(function (request, response, next) {
@@ -36,24 +56,30 @@ app.use(function (request, response, next) {
 // will print stacktrace
 if (app.get('env') === 'development') {
     app.use(function (error, request, response, next) {
+        var viewModel;
         response.status(error.status || 500);
-        response.render('error', {
+        viewModel = {
             title: 'Error',
+            className: 'error',
             message: error.message,
             error: error
-        });
+        };
+        response.render('error', viewModel);
     });
 }
 
 // production error handler
 // no stacktraces leaked to user
 app.use(function (error, request, response, next) {
+    var viewModel;
     response.status(error.status || 500);
-    response.render('error', {
+    viewModel = {
         title: 'Error',
+        className: 'error',
         message: error.message,
         error: {}
-    });
+    };
+    response.render('error', viewModel);
 });
 
 module.exports = app;
