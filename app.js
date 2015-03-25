@@ -1,10 +1,12 @@
-// Dependencies
+// Core Dependencies
 var express = require('express'),
     path = require('path'),
     logger = require('morgan'),
     cookieParser = require('cookie-parser'),
-    bodyParser = require('body-parser'),
-    index = require('./routes/index');
+    bodyParser = require('body-parser');
+
+// Application modules
+var index = require('./routes/index');
 
 var app = express();
 
@@ -36,6 +38,7 @@ if (app.get('env') === 'development') {
     app.use(function (error, request, response, next) {
         response.status(error.status || 500);
         response.render('error', {
+            title: 'Error',
             message: error.message,
             error: error
         });
@@ -47,6 +50,7 @@ if (app.get('env') === 'development') {
 app.use(function (error, request, response, next) {
     response.status(error.status || 500);
     response.render('error', {
+        title: 'Error',
         message: error.message,
         error: {}
     });

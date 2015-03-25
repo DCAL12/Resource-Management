@@ -3,7 +3,7 @@ var express = require('express'),
 
 // Get Default/Home Page
 router.get('/', function(request, response, next) {
-  response.render('index', { title: 'Express' });
+  response.render('index', { title: 'Resource Management' });
 });
 
 module.exports = router;

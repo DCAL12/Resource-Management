@@ -1,11 +1,20 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title><%= title %></title>
-        <link rel="stylesheet" href="/stylesheets/style.css">
-    </head>
-    <body>
-        <h1><%= title %></h1>
+
+<head lang="en"><% include partials/head.ejs %></head>
+
+<body>
+    <header role="banner">
+        <% include partials/banner.ejs %>
+    </header>
+
+    <main role="main">
         <p>Welcome to <%= title %></p>
-    </body>
+    </main>
+
+    <footer>
+        <% include partials/footer.ejs %>
+    </footer>
+
+</body>
 </html>
