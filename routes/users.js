@@ -1,11 +1,21 @@
-var express = require('express'),
-    router = express.Router();
+// Dependencies
+var express = require('express');
 
-// Get users listing
+// Application modules/middleware
+var userService = require('../services/user-service');
+
+var router = express.Router();
+
+// Go to login
 router.get('/', function (request, response, next) {
-        response.send('respond with a resource');
+        var viewModel = {
+        title: 'Login',
+        className: 'login'
+    };
+    response.render('users/login', viewModel);
 });
 
+// Get new user form
 router.get('/create', function(request, response, next) {
     var viewModel = {
         title: 'Create an Account',
@@ -14,18 +24,21 @@ router.get('/create', function(request, response, next) {
     response.render('users/create', viewModel);
 });
 
+// Submit new user form
 router.post('/create', function(request, response, next) {
-    if (postFailed) {
-        var viewModel = {
-            title: 'Create an Account',
-            className: 'createAccount',
-            formInput: request.body,
-            error: 'Something went wrong, please try again'
-        };
-        delete viewModel.formInput.password;
-        return response.render('users/create', viewModel);
-    }
-    response.render('users/create', viewModel);
+    userService.addUser(request.body, function(error) {
+        if (error) {
+            var viewModel = {
+                title: 'Create an Account',
+                className: 'createAccount',
+                formInput: request.body,
+                errorMessage: error 
+            };
+            delete viewModel.formInput.password;
+            return response.render('users/create', viewModel);
+        }
+        response.redirect('/workspace');
+    });
 });
 
 module.exports = router;

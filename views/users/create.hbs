@@ -2,7 +2,7 @@
     <label for="firstName">First Name</label>
     <input type="text" id="firstName" name="firstName" value="{{formInput.firstName}}" required>
     <label for="lastName">Last Name</label>
-    <input type="text" id="lastName" name="LastName" value="{{formInput.lastName}}" required>
+    <input type="text" id="lastName" name="lastName" value="{{formInput.lastName}}" required>
     <label for="email">Email</label>
     <input type="email" id="email" name="email" value="{{formInput.email}}" required>
     <label for="password">Password</label>
@@ -10,4 +10,5 @@
     <label for="password">Confirm Password</label>
     <input type="password" id="confirmPassword" name="confirmPassword" required>
     <input type="submit" value="Create Account">
+    {{#if errorMessage}}<p class="errorMessage"><strong>Error:&nbsp</strong>{{errorMessage}}</p>{{/if}}
 </form>

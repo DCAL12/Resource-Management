@@ -6,7 +6,6 @@ var debug = require('debug')('main'),
 
 // Application modules
 var app = require('../app');
-    //database = require('../data/database');
 
 // Initialize HTTP server
 var port,
