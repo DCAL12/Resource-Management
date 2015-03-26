@@ -1,4 +1,4 @@
-// Core Dependencies
+// Dependencies
 var express = require('express'),
     path = require('path'),
     logger = require('morgan'),
@@ -7,26 +7,11 @@ var express = require('express'),
 
 // Application modules
 var index = require('./routes/index'),
-    users = require('./routes/users');
+    users = require('./routes/users'),
+    config = require('config');
 
 var app = express();
-app.locals.siteTitle = 'Resource Management';
-app.locals.siteDescription = 'A tool for managing organizational assets';
-app.locals.navigationItems = [
-    {
-        title: 'Users',
-        route: '/users'
-    },
-    {
-        title: 'view 2',
-        route: '/view2'
-    },
-    {
-        title: 'view 3',
-        route: '/view3'
-    }
-];
-app.locals.userName;
+app.locals.config = config.locals;
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));

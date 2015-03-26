@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 
-// Core Dependencies
+// Dependencies
 var debug = require('debug')('main'),
     http = require('http');
-
 
 // Application modules
 var app = require('../app');

@@ -32,3 +32,5 @@ data
 # IDE files
 .idea
 *.iml
+.git
+.c9
