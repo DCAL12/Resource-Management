@@ -5,6 +5,7 @@ var passport = require('passport');
 // Application modules
 var userService = require('../services/user-service');
 var restrictRoute = require('../authentication/restrictRoute');
+var config = require('../config');
 
 var router = express.Router();
 
@@ -48,6 +49,7 @@ router.get('/', function (request, response, next) {
         className: 'login',
         userName: null,
         formInput: request.body,
+        cookieMaxAge: config.cookieMaxAgeDays,
         errorMessage: request.flash('error')
     };
     delete viewModel.formInput.password;
@@ -55,7 +57,15 @@ router.get('/', function (request, response, next) {
 });
 
 // Submit login
-router.post('/login', passport.authenticate('local', {
+router.post('/login', 
+    function(request, response, next) {
+        // set the session cookie
+        if(request.body.stayLoggedIn){
+            request.session.cookie.maxAge = config.cookieMaxAgeMilliseconds;
+        }
+        next();
+    },
+    passport.authenticate('local', {
     failureFlash: 'username or password is incorrect',
     failureRedirect: '/users',
     successRedirect: '/workspace'
@@ -76,6 +86,7 @@ router.get('/account', restrictRoute, function(request, response, next) {
 // Logout
 router.get('/logout', function(request, response, next) {
     request.logout();
+    request.session.destroy();
     response.redirect('/users');
 });
 

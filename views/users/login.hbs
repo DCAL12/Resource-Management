@@ -3,6 +3,11 @@
     <input type="email" id="email" name="email" value="{{formInput.email}}" required>
     <label for="password">Password</label>
     <input type="password" id="password" name="password" required>
+    <label for="stayLoggedIn">Keep me logged in
+        {{#if cookieMaxAge}}
+            for {{cookieMaxAge}} days
+        {{/if}}</label>
+    <input type="checkbox" id="stayLoggedIn" name="stayLoggedIn">
     <input type="submit" value="Login">
     {{#if errorMessage}}
         <p class="errorMessage"><strong>Error: </strong>{{errorMessage}}.</p>

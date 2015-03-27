@@ -7,7 +7,8 @@ var express = require('express'),
     mongoose = require('mongoose'),
     passport = require('passport'),
     expressSession = require('express-session'),
-    flash = require('connect-flash');
+    connectFlash = require('connect-flash'),
+    connectMongo = require('connect-mongo');
 
 // Application modules
 var index = require('./routes/index'),
@@ -18,22 +19,27 @@ var index = require('./routes/index'),
 
 var app = express();
 app.locals.config = config.locals;
-passportConfig();
 
+// Module setup
+passportConfig();
 mongoose.connect(config.databaseURI);
+var MongoSessionStore = connectMongo(expressSession);
+config.session.store = new MongoSessionStore({
+    mongooseConnection: mongoose.connection
+});
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
-// Middleware Setup
+// Middleware chain
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(expressSession(config.session));
-app.use(flash());
+app.use(connectFlash());
 app.use(passport.initialize());
 app.use(passport.session());
 
