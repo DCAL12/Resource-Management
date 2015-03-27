@@ -1,26 +1,35 @@
+// Core/NPM Dependencies
+var bcrypt = require('bcrypt');
+
+// Application modules
 var User = require('../models/UserSchema').User;
 
 exports.addUser = function(user, next) {
-	var newUser = {
-		firstName: user.firstName,
-		lastName: user.lastName,
-		email: user.email.toLowerCase(),
-		password: user.password
-	};
-	
-	User.create(newUser, function (error) {
+	bcrypt.hash(user.password, 10, function(error, hashedPassword) {
 		if (error) {
-			return next(error.toString()
-			.substring(
-				error.toString()
-				.indexOf(':') + 2
-			));
+			return next(error);
 		}
-		next(null);
+		var newUser = {
+			firstName: user.firstName,
+			lastName: user.lastName,
+			email: user.email.toLowerCase(),
+			password: hashedPassword
+		};
+		
+		User.create(newUser, function (error) {
+			if (error) {
+				return next(error.toString()
+				.substring(
+					error.toString()
+					.indexOf(':') + 2
+				));
+			}
+			next(null);
+		});
 	});
 };
 
-exports.checkIfUserExists = function (email, next) {
+exports.findUserByEmail = function (email, next) {
 	User.findOne({ email: email.toLowerCase()}, function(error, user) {
 		next(error, user);
 	});

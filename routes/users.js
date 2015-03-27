@@ -1,25 +1,19 @@
-// Dependencies
+// Core/NPM Dependencies
 var express = require('express');
+var passport = require('passport');
 
-// Application modules/middleware
+// Application modules
 var userService = require('../services/user-service');
+var restrictRoute = require('../authentication/restrictRoute');
 
 var router = express.Router();
-
-// Go to login
-router.get('/', function (request, response, next) {
-        var viewModel = {
-        title: 'Login',
-        className: 'login'
-    };
-    response.render('users/login', viewModel);
-});
 
 // Get new user form
 router.get('/create', function(request, response, next) {
     var viewModel = {
         title: 'Create an Account',
-        className: 'createAccount'
+        className: 'createAccount',
+        userName: request.user ? request.user.email : null
     };
     response.render('users/create', viewModel);
 });
@@ -31,14 +25,58 @@ router.post('/create', function(request, response, next) {
             var viewModel = {
                 title: 'Create an Account',
                 className: 'createAccount',
+                userName: request.user ? request.user.email : null,
                 formInput: request.body,
                 errorMessage: error 
             };
             delete viewModel.formInput.password;
             return response.render('users/create', viewModel);
         }
-        response.redirect('/workspace');
+        request.login(request.body, function(error) {
+            if (error) {
+                response.redirect('/users');
+            }
+            response.redirect('/workspace');
+        });
     });
+});
+
+// Go to login
+router.get('/', function (request, response, next) {
+        var viewModel = {
+        title: 'Login',
+        className: 'login',
+        userName: null,
+        formInput: request.body,
+        errorMessage: request.flash('error')
+    };
+    delete viewModel.formInput.password;
+    response.render('users/login', viewModel);
+});
+
+// Submit login
+router.post('/login', passport.authenticate('local', {
+    failureFlash: 'username or password is incorrect',
+    failureRedirect: '/users',
+    successRedirect: '/workspace'
+}));
+
+// Modify account information
+router.get('/account', restrictRoute, function(request, response, next) {
+    var viewModel = {
+        title: 'My Account',
+        className: 'account',
+        userName: request.user.email,
+        user: request.user
+    };
+    delete viewModel.user.password;
+    response.render('users/account', viewModel);
+});
+
+// Logout
+router.get('/logout', function(request, response, next) {
+    request.logout();
+    response.redirect('/users');
 });
 
 module.exports = router;

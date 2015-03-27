@@ -1,7 +1,12 @@
-<form name="login" method="post" action="/users">
+<form name="login" method="post" action="users/login">
     <label for="email">Email</label>
-    <input type="email" id="email" name="email" required>
+    <input type="email" id="email" name="email" value="{{formInput.email}}" required>
     <label for="password">Password</label>
     <input type="password" id="password" name="password" required>
     <input type="submit" value="Login">
+    {{#if errorMessage}}
+        <p class="errorMessage"><strong>Error: </strong>{{errorMessage}}.</p>
+        <p>Try again or <a href="/users/create" title="Create Account">create an account</a></p>
+        
+    {{/if}}
 </form>

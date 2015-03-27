@@ -27,13 +27,14 @@ var userSchema = new Schema({
 	}
 });
 
-userSchema.path('email').validate(function(value, next) {
-	userService.checkIfUserExists(value, function(error, user) {
+// Ensure the user doesn't already exist
+userSchema.path('email').validate(function(email, next) {
+	userService.findUserByEmail(email, function(error, user) {
 		if (error) {
-			console.log(error);
+			// user already exists in the database
 			return next(false);
 		}
-		next(!user)
+		next(!user); // return true if the user doesn't exist yet
 	});
 }, 'That user already exists');
 

@@ -1,0 +1,14 @@
+<form name="modifyUser" method="post">
+    <label for="firstName">First Name</label>
+    <input type="text" id="firstName" name="firstName" value="{{user.firstName}}" required>
+    <label for="lastName">Last Name</label>
+    <input type="text" id="lastName" name="lastName" value="{{user.lastName}}" required>
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" value="{{user.email}}" required>
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" required>
+    <label for="password">Confirm Password</label>
+    <input type="password" id="confirmPassword" name="confirmPassword" required>
+    <input type="submit" value="Update">
+    {{#if errorMessage}}<p class="errorMessage"><strong>Error:&nbsp</strong>{{errorMessage}}</p>{{/if}}
+</form>
