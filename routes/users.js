@@ -71,7 +71,7 @@ router.post('/login',
     successRedirect: '/workspace'
 }));
 
-// Modify account information
+// Go to account information
 router.get('/account', restrictRoute, function(request, response, next) {
     var viewModel = {
         title: 'My Account',
@@ -81,6 +81,58 @@ router.get('/account', restrictRoute, function(request, response, next) {
     };
     delete viewModel.user.password;
     response.render('users/account', viewModel);
+});
+
+// Update user profile
+router.post('/update', function(request, response, next) {
+    userService.updateUser(request.user, request.body, function(error, user) {
+        var viewModel = {
+            title: 'My Account',
+            className: 'account',
+            userName: request.user.email,
+            user: request.user
+        };
+        
+        if (error) {
+            viewModel.accountUpdateStatus = 'Error';
+            viewModel.statusMessage = error;
+            return response.render('users/account', viewModel);
+        }
+        request.login(user, function(error) {
+            if (error) {
+                viewModel.accountUpdateStatus = 'Error';
+                viewModel.statusMessage = error;
+                return response.render('users/account', viewModel);
+            }
+            viewModel.userName = user.email;
+            viewModel.user = user;
+            viewModel.accountUpdateStatus = 'Success';
+            viewModel.statusMessage = 'your profile has been updated!';
+            response.render('users/account', viewModel);
+        });
+    });
+});
+
+// Change password
+router.post('/change-password', function(request, response, next) {
+    console.log(request.body);
+    userService.changePassword(request.user, request.body.password, function(error) {
+        var viewModel = {
+            title: 'My Account',
+            className: 'account',
+            userName: request.user.email,
+            user: request.user
+        };
+        
+        if (error) {
+            viewModel.passwordChangeStatus = 'Error';
+            viewModel.statusMessage = error;
+            return response.render('users/account', viewModel);
+        }
+        viewModel.passwordChangeStatus = 'Success';
+        viewModel.statusMessage = 'your password has been updated!';
+        response.render('users/account', viewModel);
+    });
 });
 
 // Logout

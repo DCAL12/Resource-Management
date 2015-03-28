@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var uniqueValidator = require('mongoose-unique-validator');
 
 var userService = require('../services/user-service');
 
@@ -15,7 +16,8 @@ var userSchema = new Schema({
 	},
 	email: {
 		type: String, 
-		required: 'Email is required'
+		required: 'Email is required',
+		unique: true
 	},
 	password: {
 		type: String, 
@@ -27,16 +29,9 @@ var userSchema = new Schema({
 	}
 });
 
-// Ensure the user doesn't already exist
-userSchema.path('email').validate(function(email, next) {
-	userService.findUserByEmail(email, function(error, user) {
-		if (error) {
-			// user already exists in the database
-			return next(false);
-		}
-		next(!user); // return true if the user doesn't exist yet
-	});
-}, 'That user already exists');
+userSchema.plugin(uniqueValidator, {
+	message: 'That user already exists. Choose a different {PATH}.'
+});
 
 var User = mongoose.model('User', userSchema);
 

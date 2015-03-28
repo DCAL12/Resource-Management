@@ -29,8 +29,14 @@
 
         <nav role="navigation" class="siteNavigation">
             <ul>
-                {{!-- Application-wide navigation menu goes here. Each link should be included as a <li> --}}
-                {{!-- <li><a href="{{this.route}}" title="{{this.title}}">{{this.title}}</a></li> --}}
+                <li><a href="/" title="About this App">About</a></li>
+                
+                {{!-- Restricted links. These won't be shown unless the user is logged in --}}
+                {{#if userName}}
+                    <li><a href="/workspace" title="Assets">Assets</a></li>
+                    <li><a href="/workspace" title="Requests">Requests</a></li>
+                    <li><a href="/workspace" title="Timeline">Timeline</a></li>
+                {{/if}}
             </ul>
         </nav>
     </header>

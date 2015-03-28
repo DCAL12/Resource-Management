@@ -1,14 +1,30 @@
-<form name="modifyUser" method="post">
+<section>
+<h3>Update Profile</h3>
+<form name="modifyUser" method="post" action="update">
     <label for="firstName">First Name</label>
     <input type="text" id="firstName" name="firstName" value="{{user.firstName}}" required>
     <label for="lastName">Last Name</label>
     <input type="text" id="lastName" name="lastName" value="{{user.lastName}}" required>
     <label for="email">Email</label>
     <input type="email" id="email" name="email" value="{{user.email}}" required>
-    <label for="password">Password</label>
+    <input type="submit" value="Update">
+    
+    {{!-- accountUpdateStatus will be null, 'Success', or 'Error' --}}
+    {{#if accountUpdateStatus}}<p class="{{accountUpdateStatus}}"><strong>{{accountUpdateStatus}}:&nbsp</strong>{{statusMessage}}</p>{{/if}}
+</form>    
+</section>
+
+
+<section>
+<h3>Change Password</h3>
+<form name="changePassword" method="post" action="change-password">
+    <label for="password">New Password</label>
     <input type="password" id="password" name="password" required>
     <label for="password">Confirm Password</label>
     <input type="password" id="confirmPassword" name="confirmPassword" required>
-    <input type="submit" value="Update">
-    {{#if errorMessage}}<p class="errorMessage"><strong>Error:&nbsp</strong>{{errorMessage}}</p>{{/if}}
+    <input type="submit" value="Change Password">
+    
+    {{!-- passwordChangeStatus will be null, 'Success', or 'Error' --}}
+    {{#if passwordChangeStatus}}<p class="{{passwordChangeStatus}}"><strong>{{passwordChangeStatus}}:&nbsp</strong>{{statusMessage}}</p>{{/if}}
 </form>
+</section>

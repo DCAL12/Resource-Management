@@ -10,9 +10,6 @@ router.get('/', function(request, response, next) {
         className: 'default',
         userName: request.user ? request.user.email : null
     };
-    if (request.user) {
-        response.redirect('/workspace');
-    }
     response.render('index', viewModel);
 });
 
