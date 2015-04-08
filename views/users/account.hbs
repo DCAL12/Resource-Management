@@ -7,10 +7,29 @@
     <input type="text" id="lastName" name="lastName" value="{{user.lastName}}" required>
     <label for="email">Email</label>
     <input type="email" id="email" name="email" value="{{user.email}}" required>
+    
+    {{#if workspaces}}
+        <label for="defaultOrganization">Default Organization</label>
+        <select id="defaultOrganization" name="defaultOrganization">
+            {{#if user.defaultOrganization}}
+                <option value="{{user.defaultOrganization}}" selected>
+                    {{user.defaultOrganization}}
+                </option>    
+            {{/if}}
+            {{#each workspaces}}
+                <option value="{{this.organization}}">
+                    {{this.organization}}
+                </option>
+            {{/each}}
+        </select>
+    {{/if}}
+    
     <input type="submit" value="Update">
     
     {{!-- accountUpdateStatus will be null, 'Success', or 'Error' --}}
-    {{#if accountUpdateStatus}}<p class="{{accountUpdateStatus}}"><strong>{{accountUpdateStatus}}:&nbsp</strong>{{statusMessage}}</p>{{/if}}
+    {{#if accountUpdateStatus}}
+        <p class="{{accountUpdateStatus}}"><strong>{{accountUpdateStatus}}:&nbsp</strong>{{statusMessage}}</p>
+    {{/if}}
 </form>    
 </section>
 

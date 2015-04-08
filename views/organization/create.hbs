@@ -1,0 +1,8 @@
+<form name="createOrganization" method="post">
+    <label for="organizationName">Organization Name</label>
+    <input type="text" id="organizationName" name="organizationName" value="{{formInput.organizationName}}" required>
+    <label for="defaultOrganization">Make this my default workspace</label>
+    <input type="checkbox" id="defaultOrganization" name="defaultOrganization" value="true" checked>
+    <input type="submit" value="Create">
+    {{#if errorMessage}}<p class="errorMessage"><strong>Error:&nbsp</strong>{{errorMessage}}</p>{{/if}}
+</form>

@@ -34,3 +34,6 @@ data
 *.iml
 .git
 .c9
+
+# Local script files
+.mongod-start

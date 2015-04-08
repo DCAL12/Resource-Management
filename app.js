@@ -14,6 +14,7 @@ var express = require('express'),
 var index = require('./routes/index'),
     users = require('./routes/users'),
     workspace = require('./routes/workspace'),
+    organization = require('./routes/organization'),
     config = require('./config'),
     passportConfig = require('./authentication/passport-config');
 
@@ -47,6 +48,7 @@ app.use(passport.session());
 app.use('/', index);
 app.use('/users', users);
 app.use('/workspace', workspace);
+app.use('/organization', organization);
 
 // Catch 404 and forward to error handler
 app.use(function (request, response, next) {
@@ -56,27 +58,38 @@ app.use(function (request, response, next) {
 });
 
 // Error Handlers
-
+var viewModel = {
+    title: 'Error',
+    className: 'error',
+};
+    
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-  app.use(function(error, request, response, next) {
-    response.status(error.status || 500);
-    response.render('error', {
-      message: error.message,
-      error: error
-    });
+    app.use(function(error, request, response, next) {
+        response.status(error.status || 500);
+    
+        viewModel.user = request.user ? request.user : null;
+        viewModel.workspaces = request.session.workspaces ? 
+            request.session.workspaces : null;
+        viewModel.message = error.message;
+        viewModel.error = error;
+        
+        response.render('error', viewModel);
   });
 }
 
 // production error handler
 // no stacktraces leaked to user
 app.use(function(error, request, response, next) {
-  response.status(error.status || 500);
-  response.render('error', {
-    message: error.message,
-    error: {}
-  });
+    response.status(error.status || 500);
+    
+    viewModel.user = request.user ? request.user : null;
+    viewModel.workspaces = request.session.workspaces ? 
+        request.session.workspaces : null;
+    viewModel.message = error.message;
+    
+    response.render('error', viewModel);
 });
 
 module.exports = app;

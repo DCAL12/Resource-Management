@@ -1,7 +1,5 @@
-var mongoose = require('mongoose');
-var uniqueValidator = require('mongoose-unique-validator');
-
-var userService = require('../services/user-service');
+var mongoose = require('mongoose'),
+	uniqueValidator = require('mongoose-unique-validator');
 
 var Schema = mongoose.Schema;
 
@@ -22,6 +20,9 @@ var userSchema = new Schema({
 	password: {
 		type: String, 
 		required: 'Password is required'
+	},
+	defaultOrganization: {
+		type: String	
 	},
 	createdOn: {
 		type: Date, 

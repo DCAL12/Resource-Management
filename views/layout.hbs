@@ -18,36 +18,53 @@
         <h1><a href="/"  title="{{config.siteTitle}}">{{config.siteTitle}}</a></h1>
         <div id="accountInfo">
             <label for="accountInfo">Account: </label>
-            {{#if userName}}
-                <a href="/users/account" title="Modify Account">{{userName}}</a>&nbsp;|
-                <a href="/users/logout" title="Logout">Logout</a>
-            {{else}}
-                <a href="/users" title="Login">Login</a>&nbsp;| 
-                <a href="/users/create" title="Create Account">Create Account</a>
-            {{/if}}
+            {{#if user}}
+            <a href="/users/account" title="Modify Account">{{user.email}}</a>&nbsp;|
+            <a href="/users/logout" title="Logout">Logout</a> {{else}}
+            <a href="/users" title="Login">Login</a>&nbsp;|
+            <a href="/users/create" title="Create Account">Create Account</a> {{/if}}
         </div>
 
         <nav role="navigation" class="siteNavigation">
             <ul>
-                <li><a href="/" title="About this App">About</a></li>
-                
-                {{!-- Restricted links. These won't be shown unless the user is logged in --}}
-                {{#if userName}}
-                    <li><a href="/workspace" title="Assets">Assets</a></li>
-                    <li><a href="/workspace" title="Requests">Requests</a></li>
-                    <li><a href="/workspace" title="Timeline">Timeline</a></li>
+                <li><a href="/" title="About this App">About</a>
+                </li>
+
+                {{!-- Restricted links. These won't be shown unless the user is logged in --}} {{#if user}}
+                <li><a href="/workspace" title="Assets">Assets</a>
+                </li>
+                <li><a href="/workspace" title="Requests">Requests</a>
+                </li>
+                <li><a href="/workspace" title="Timeline">Timeline</a>
+                </li>
+                <li><a href="/organization" title="Organizations">My Organizations</a>
+                    <ul>
+                        
+                        {{#if workspaces}}
+                            {{#each workspaces}}
+                                <li>
+                                    <a href="/organization/:{{this.organization}}" title="{{this.organization}}">{{this.organization}}</a>    
+                                </li>
+                            {{/each}}
+                        {{/if}}
+                        
+                        <li>
+                            <a href="/organization/create" title="Create New">Create New</a>
+                        </li>
+                    </ul>
+                </li>
                 {{/if}}
             </ul>
         </nav>
     </header>
 
     <main role="main" class="{{className}}">
-        <h2>{{title}}</h2>
-        {{{body}}}
+        <h2>{{title}}</h2> {{{body}}}
     </main>
 
-<footer>
-</footer>
+    <footer>
+    </footer>
 
 </body>
+
 </html>

@@ -39,6 +39,7 @@ exports.updateUser = function (user, update, next) {
 		userDocument.firstName = update.firstName;
 		userDocument.lastName = update.lastName;
 		userDocument.email = update.email.toLowerCase();
+		userDocument.defaultOrganization = update.defaultOrganization.toLowerCase();
 
 		userDocument.save(function (error) {
 			if (error) {
