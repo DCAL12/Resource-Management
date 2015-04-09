@@ -1,18 +1,29 @@
-// Core/NPM Dependencies
-var express = require('express');
+var express = require('express'),
+    viewModel = require('../models/ViewModel');
     
-var router = express.Router(),
-    viewModel = {};
+var router = express.Router();
 
 // Get Default/Home Page
 router.get('/', function(request, response, next) {
-    viewModel.title = 'Welcome to Resource Management';
-    viewModel.className = 'default';
-    viewModel.user = request.user ? request.user : null;
-    viewModel.workspaces = request.session.workspaces ? 
-        request.session.workspaces : null;
+    var viewData = viewModel({
+        title: 'Welcome to Resource Management',
+        className: 'default'        
+    }, request.user, request.session);
+    
+    if (request.user) {
+        return response.redirect('/welcome');
+    }
+    
+    response.render('index', viewData);
+});
+
+router.get('/welcome', function(request, response, next) {
+    var viewData = viewModel({
+        title: 'Welcome ' + request.user.firstName,
+        className: 'welcome'        
+    }, request.user, request.session);
         
-    response.render('index', viewModel);
+    response.render('index', viewData);
 });
 
 router.get('/login', function(request, response, next) {

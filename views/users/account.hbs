@@ -1,5 +1,11 @@
 <section>
 <h3>Update Profile</h3>
+
+{{!-- status will be null, 'Success', or 'Error' --}}
+{{#if status}}
+    <p class="{{status}}"><strong>{{status}}:&nbsp</strong>{{statusMessage}}</p>
+{{/if}}
+
 <form name="modifyUser" method="post" action="update">
     <label for="firstName">First Name</label>
     <input type="text" id="firstName" name="firstName" value="{{user.firstName}}" required>
@@ -25,14 +31,8 @@
     {{/if}}
     
     <input type="submit" value="Update">
-    
-    {{!-- accountUpdateStatus will be null, 'Success', or 'Error' --}}
-    {{#if accountUpdateStatus}}
-        <p class="{{accountUpdateStatus}}"><strong>{{accountUpdateStatus}}:&nbsp</strong>{{statusMessage}}</p>
-    {{/if}}
 </form>    
 </section>
-
 
 <section>
 <h3>Change Password</h3>
@@ -42,8 +42,5 @@
     <label for="password">Confirm Password</label>
     <input type="password" id="confirmPassword" name="confirmPassword" required>
     <input type="submit" value="Change Password">
-    
-    {{!-- passwordChangeStatus will be null, 'Success', or 'Error' --}}
-    {{#if passwordChangeStatus}}<p class="{{passwordChangeStatus}}"><strong>{{passwordChangeStatus}}:&nbsp</strong>{{statusMessage}}</p>{{/if}}
 </form>
 </section>

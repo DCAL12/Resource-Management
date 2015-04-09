@@ -18,10 +18,16 @@ exports.addOrganization = function (organization, next) {
 	});
 };
 
-// exports.findOrganizationsByEmail = function (email, next) {
-// 	Workspace.find({
-// 		email: email.toLowerCase()
-// 	}, function (error, user) {
-// 		next(error, user);
-// 	});
-// };
+exports.getOrganizations = function (next) {
+	Organization.find(null, function (error, organizations) {
+		next(error, organizations);
+	});
+};
+
+exports.findOrganizationByName = function (name, next) {
+	Organization.findOne({
+		name: name.toLowerCase()
+	}, function (error, organization) {
+		next(error, organization);
+	});
+};

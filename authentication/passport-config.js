@@ -8,7 +8,7 @@ module.exports = function() {
 	var config = require('../config');
 	
 	passport.use(new passport_local.Strategy({
-			usernameField: config.locals.usernameField
+			usernameField: config.siteInfo.usernameField
 		}, function(email, password, next) {
 			userService.findUserByEmail(email, function(error, user) {
 				if (error) {

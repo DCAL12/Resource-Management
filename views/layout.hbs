@@ -5,7 +5,7 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>{{title}}</title>
-    <meta name="description" content="{{config.siteDescription}}">
+    <meta name="description" content="{{siteInfo.siteDescription}}">
     <link rel="stylesheet" media="screen" href="/stylesheets/style.css">
     <!-- Adds HTML5 element support for earlier versions of IE -->
     <!--[if lt IE 9]>
@@ -15,7 +15,7 @@
 
 <body>
     <header role="banner">
-        <h1><a href="/"  title="{{config.siteTitle}}">{{config.siteTitle}}</a></h1>
+        <h1><a href="/"  title="{{siteInfo.siteTitle}}">{{siteInfo.siteTitle}}</a></h1>
         <div id="accountInfo">
             <label for="accountInfo">Account: </label>
             {{#if user}}
@@ -27,39 +27,47 @@
 
         <nav role="navigation" class="siteNavigation">
             <ul>
-                <li><a href="/" title="About this App">About</a>
-                </li>
+                <li><a href="/" title="About this App">About</a></li>
 
-                {{!-- Restricted links. These won't be shown unless the user is logged in --}} {{#if user}}
-                <li><a href="/workspace" title="Assets">Assets</a>
-                </li>
-                <li><a href="/workspace" title="Requests">Requests</a>
-                </li>
-                <li><a href="/workspace" title="Timeline">Timeline</a>
-                </li>
-                <li><a href="/organization" title="Organizations">My Organizations</a>
-                    <ul>
-                        
-                        {{#if workspaces}}
-                            {{#each workspaces}}
-                                <li>
-                                    <a href="/organization/:{{this.organization}}" title="{{this.organization}}">{{this.organization}}</a>    
-                                </li>
-                            {{/each}}
-                        {{/if}}
-                        
-                        <li>
-                            <a href="/organization/create" title="Create New">Create New</a>
-                        </li>
-                    </ul>
-                </li>
+                {{!-- Restricted links. These won't be shown unless the user is logged in --}} 
+                {{#if user}}
+                    <li><a href="/organizations" title="Organizations">Organizations</a></li>
+                    <li>My Organizations</li>
+                        <ul>
+                    {{#if workspaces}}
+                        {{#each workspaces}}
+                            <li>
+                                <a href="/organizations/{{this.organization}}" title="{{this.organization}}">{{this.organization}}</a>    
+                            </li>
+                        {{/each}}
+                    {{/if}}
+                            <li><a href="/organizations/create" title="create new">create new</a></li>    
+                        </ul>
+                    <li><a href="/requests" title="My Requests">My Requests</a></li>
                 {{/if}}
             </ul>
         </nav>
     </header>
 
     <main role="main" class="{{className}}">
-        <h2>{{title}}</h2> {{{body}}}
+        <header>
+            <h2>{{title}}</h2>
+            
+            {{!-- Workspace tabs. These won't be shown unless the user is logged in and has a workspace selected--}} 
+            {{#if currentWorkspace}}
+            
+            <div id="currentRole">
+                <p>Current Role: {{currentRole}} | <a href="/organizations/requestAccess" title="Request Access">Request Access</a></p>    
+            </div>
+            
+            <nav role="navigation" class="workspaceNavigation">
+                <li><a href="/workspace" title="Assets">Assets</a></li>
+                <li><a href="/workspace" title="Requests">Requests</a></li>
+                <li><a href="/workspace" title="Timeline">Timeline</a></li>    
+            </nav>
+            {{/if}}
+        </header>
+        {{{body}}}
     </main>
 
     <footer>

@@ -14,12 +14,13 @@ var express = require('express'),
 var index = require('./routes/index'),
     users = require('./routes/users'),
     workspace = require('./routes/workspace'),
-    organization = require('./routes/organization'),
+    organizations = require('./routes/organizations'),
     config = require('./config'),
     passportConfig = require('./authentication/passport-config');
 
 var app = express();
-app.locals.config = config.locals;
+app.locals.siteInfo = config.siteInfo;
+app.locals.cookieConfig = config.cookies;
 
 // Module setup
 passportConfig();
@@ -48,7 +49,7 @@ app.use(passport.session());
 app.use('/', index);
 app.use('/users', users);
 app.use('/workspace', workspace);
-app.use('/organization', organization);
+app.use('/organizations', organizations);
 
 // Catch 404 and forward to error handler
 app.use(function (request, response, next) {
