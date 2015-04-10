@@ -1,1 +1,87 @@
-<!-- Client-side GUI scripts go here -->
+<header>
+	<h2>{{title}}</h2>
+
+	<div id="currentRole">
+		<p>Current Role: {{currentRole}} | <a href="/organizations/requestAccess" title="Request Access">Request Access</a>
+		</p>
+	</div>
+
+	<nav role="navigation" class="workspaceNavigation">
+		<li><a href="/workspace" title="Timeline">Timeline</a>
+		</li>
+		<li><a href="/workspace" title="Requests">Requests</a>
+		</li>
+		<li><a href="/workspace" title="Assets">Assets</a>
+		</li>
+		<li><a href="/workspace" title="Settings">Settings</a>
+		</li>
+	</nav>
+</header>
+
+<section>
+	<h3>Timeline</h3>
+	<!-- GUI for visually representing resources and requests on a timeline. 
+	User updates are saved to the database. -->
+	{{organizationInfo.requests}}
+	{{organizationInfo.resources}}
+</section>
+
+<section>
+	<h3>Requests</h3>
+	<!-- Dynamic table listing all pending, approved, and denied requests. 
+	User adds, updates, and deletions are saved to the database. -->
+	{{organizationInfo.requests}}
+	<form name="addRequest" method="post" action="addRequest">
+	    <label for="resourceType">Resource Type</label>
+	    <input type="text" id="resourceType" name="req_resourceType" value="{{content.req_resourceType}}">
+	    
+	    <label for="description">Description</label>
+	    <input type="text" id="description" name="req_description" value="{{content.req_description}}" required>
+	    
+	    <label for="startTime">Start Time</label>
+	    <input type="date" id="startTime" name="req_startTime" value="{{content.req_startTime}}" required>
+	    
+	    <label for="endTime">End Time</label>
+	    <input type="date" id="endTime" name="req_endTime" value="{{content.req_endTime}}" required>
+	    
+	    <label for="location">Location</label>
+	    <input type="text" id="location" name="req_location" value="{{content.req_location}}" required>
+	    
+	    <input type="submit" value="Submit">
+	</form>
+</section>
+
+<section>
+	<h3>Assets</h3>
+		<h4>Resource Types</h4>
+		<!-- Dynamic table listing all defined resource types. 
+		User adds, updates, and deletions are saved to the database. -->
+		{{organizationInfo.resourceTypes}}
+		<form name="addResourceType" method="post" action="addResourceType">
+		    <label for="resourceTypeName">Resource Type Name</label>
+		    <input type="text" id="resourceTypeName" name="resourceTypeName" value="{{content.resourceTypeName}}" required>
+		    <input type="submit" value="Submit">
+		</form>
+		
+		<h4>Resources</h4>
+		<!-- Dynamic table listing all resources by type. 
+		User adds, updates, and deletions are saved to the database. -->
+		{{organizationInfo.resources}}
+		<form name="addResource" method="post" action="addResource">
+		    <label for="resourceName">Resource Name</label>
+		    <input type="text" id="resourceName" name="resourceName" value="{{content.resourceName}}" required>
+		    <label for="resourceType">Resource Type</label>
+		    <input type="text" id="resourceType" name="resourceType" value="{{content.resourceType}}" required>
+		    <input type="submit" value="Submit">
+		</form>
+</section>
+
+<section>
+	<h3>Settings</h3>
+	<!-- Users with 'Owner' role can make changes to the organization info -->
+	{{organizationInfo.settings}}
+</section>
+
+<footer>
+	<!-- Client-side GUI scripts go here -->
+</footer>

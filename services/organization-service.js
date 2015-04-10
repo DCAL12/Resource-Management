@@ -1,5 +1,8 @@
 // Application modules
-var Organization = require('../models/OrganizationSchema').Organization;
+var Organization = require('../models/OrganizationSchema').Organization,
+	resourceTypeService = require('./resourceType-service'),
+	resourceService = require('./resource-service'),
+	requestService = require('./request-service');
 
 exports.addOrganization = function (organization, next) {
 	var newOrganization = {
@@ -30,4 +33,47 @@ exports.findOrganizationByName = function (name, next) {
 	}, function (error, organization) {
 		next(error, organization);
 	});
+};
+
+exports.getOrganizationInfo = function(organization, options, next) {
+	var organizationInfo = {},
+		errorMessage = null;
+	
+	// Get resource types 
+	if (options.resourceTypes) {
+		resourceTypeService.getResourceTypesByOrganization(organization, function(error, resourceTypes) {
+			if (error) {
+				errorMessage = error;
+			}
+			else {
+				organizationInfo.resourceTypes = resourceTypes;	
+			}
+		});
+	}
+	
+	// Get Resources
+	if (options.resources) {
+		resourceService.getResourcesByOrganization(organization, function(error, resources) {
+			if (error) {
+				errorMessage = null ? error : errorMessage + error;
+			}
+			else {
+				organizationInfo.resources = resources;	
+			}
+		});	
+	}
+	
+	// Get Requests
+	if (options.requests) {
+		requestService.getRequestsByOrganization(organization, function(error, requests) {
+			if (error) {
+				errorMessage = null ? error : errorMessage + error;
+			}
+			else {
+				organizationInfo.requests = requests;	
+			}
+		});	
+	}
+	
+	next(errorMessage, organizationInfo);	
 };

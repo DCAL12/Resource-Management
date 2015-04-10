@@ -1,4 +1,4 @@
-// Application modules
+
 var Workspace = require('../models/WorkspaceSchema').Workspace;
 
 exports.addWorkspace = function (user, organization, next) {
@@ -14,7 +14,7 @@ exports.addWorkspace = function (user, organization, next) {
 					.indexOf(':') + 2
 				));
 		}
-		next(null);
+		next(null, newWorkspace);
 	});
 };
 

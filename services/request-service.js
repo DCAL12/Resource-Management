@@ -13,3 +13,14 @@ exports.addRequest = function (request, next) {
 		next(null);
 	});
 };
+
+exports.getRequestsByOrganization = function (organization, next) {
+	Request.find({
+		organization: organization.name.toLowerCase()
+	}, function (error, requests) {
+		if (error) {
+			next(error, null);
+		}
+		next(null, requests);
+	});
+};

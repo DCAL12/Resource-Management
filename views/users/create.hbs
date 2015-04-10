@@ -1,14 +1,21 @@
+<header>
+	<h2>{{title}}</h2> 
+	
+	{{#if statusMessage}} {{!-- status will be null, 'Success', or 'Error' --}}
+        <p class="{{status}}"><strong>{{status}}:&nbsp</strong>{{statusMessage}}</p>
+    {{/if}}
+</header>
+
 <form name="createUser" method="post">
     <label for="firstName">First Name</label>
-    <input type="text" id="firstName" name="firstName" value="{{formInput.firstName}}" required>
+    <input type="text" id="firstName" name="firstName" value="{{content.firstName}}" required>
     <label for="lastName">Last Name</label>
-    <input type="text" id="lastName" name="lastName" value="{{formInput.lastName}}" required>
+    <input type="text" id="lastName" name="lastName" value="{{content.lastName}}" required>
     <label for="email">Email</label>
-    <input type="email" id="email" name="email" value="{{formInput.email}}" required>
+    <input type="email" id="email" name="email" value="{{content.email}}" required>
     <label for="password">Password</label>
     <input type="password" id="password" name="password" required>
     <label for="password">Confirm Password</label>
     <input type="password" id="confirmPassword" name="confirmPassword" required>
     <input type="submit" value="Create Account">
-    {{#if errorMessage}}<p class="errorMessage"><strong>Error:&nbsp</strong>{{errorMessage}}</p>{{/if}}
 </form>

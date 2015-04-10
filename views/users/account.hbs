@@ -1,10 +1,14 @@
+<header>
+	<h2>{{title}}</h2>
+	
+	
+    {{#if statusMessage}} {{!-- status will be null, 'Success', or 'Error' --}}
+        <p class="{{status}}"><strong>{{status}}:&nbsp</strong>{{statusMessage}}</p>
+    {{/if}}
+</header>
+
 <section>
 <h3>Update Profile</h3>
-
-{{!-- status will be null, 'Success', or 'Error' --}}
-{{#if status}}
-    <p class="{{status}}"><strong>{{status}}:&nbsp</strong>{{statusMessage}}</p>
-{{/if}}
 
 <form name="modifyUser" method="post" action="update">
     <label for="firstName">First Name</label>

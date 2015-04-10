@@ -1,11 +1,14 @@
-{{#if statusMessage}}
-        <p class="{{status}}"><strong>{{status}}:&nbsp</strong>{{statusMessage}}.</p>
-        <p>Try again or <a href="/users/create" title="Create Account">create an account</a></p>
-{{/if}}
+<header>
+	<h2>{{title}}</h2> 
+	
+	{{#if statusMessage}} {{!-- status will be null, 'Success', or 'Error' --}}
+        <p class="{{status}}"><strong>{{status}}:&nbsp</strong>{{statusMessage}}</p>
+    {{/if}}
+</header>
 
 <form name="login" method="post" action="users/login">
     <label for="email">Email</label>
-    <input type="email" id="email" name="email" value="{{formInput.email}}" required>
+    <input type="email" id="email" name="email" value="{{content.email}}" required>
     <label for="password">Password</label>
     <input type="password" id="password" name="password" required>
     

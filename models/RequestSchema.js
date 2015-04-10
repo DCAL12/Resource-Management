@@ -3,6 +3,10 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var requestSchema = new Schema({
+	organization: {
+		type: String,
+		required: 'An organization to request from is required'
+	},
 	resourceType: {
 		type: String, 
 	},

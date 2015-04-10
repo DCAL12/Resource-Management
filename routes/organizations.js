@@ -1,29 +1,28 @@
 // Core/NPM Dependencies
-var express = require('express');
-
-var organizationService = require('../services/organization-service'),
+var express = require('express'),
+    organizationService = require('../services/organization-service'),
     userService = require('../services/user-service'),
     workspaceService = require('../services/workspace-service'),
-    restrictRoute = require('../authentication/restrictRoute');
+    restrictRoute = require('../authentication/restrictRoute'),
+    viewModel = require('../models/ViewModel');
 
-var router = express.Router(),
-    viewModel = {};
+var router = express.Router();
 
 // Get Organization Page
 router.get('/', function (request, response, next) {
-    viewModel.title = 'Available Organizations',
-    viewModel.className = 'organizations',
-    viewModel.user = request.user ? request.user : null;
-    viewModel.workspaces = request.session.workspaces ? 
-        request.session.workspaces : null;
+    var viewData = viewModel({
+        title: 'Available Organizations',
+        className: 'organizations'
+    }, request.user, request.session);
         
     organizationService.getOrganizations(function(error, organizations) {
         if (error) {
-            viewModel.errorMessage = error;
-            return response.render('organizations/index', viewModel);
+            viewData.setStatus('Error', error);
+            return response.render('organizations/index', viewData);
         }
-        viewModel.organizations = organizations;
-        response.render('organizations/index', viewModel);
+        
+        viewData.organizations = organizations;
+        response.render('organizations/index', viewData);
     });
 });
 
@@ -51,45 +50,47 @@ router.get('/', function (request, response, next) {
 
 // Get new organization form
 router.get('/create', restrictRoute, function(request, response, next) {
-    viewModel.title = 'Create an Organization',
-    viewModel.className = 'createOrganization',
-    viewModel.user = request.user ? request.user : null;
-    viewModel.workspaces = request.session.workspaces ? 
-        request.session.workspaces : null;
+    var viewData = viewModel({
+        title: 'Create an Organization',
+        className: 'createOrganization'
+    }, request.user, request.session);
     
-    response.render('organizations/create', viewModel);
+    response.render('organizations/create', viewData);
 });
 
 // Submit new organization form
 router.post('/create', restrictRoute, function(request, response, next) {
-    viewModel.title = 'Create an Organization';
-    viewModel.className = 'createOrganization';
-    viewModel.user = request.user ? request.user : null;
-    viewModel.workspaces = request.session.workspaces ? 
-        request.session.workspaces : null;
-    viewModel.formInput = request.body;
+    var viewData = viewModel({
+        title: 'Create an Organization',
+        className: 'createOrganization'
+    }, request.user, request.session);
     
+    viewData.content = request.body;
     request.body.createdBy = request.user.email;
     
     organizationService.addOrganization(request.body, function(error, organization) {
         if (error) {
-            viewModel.errorMessage = error; 
-            return response.render('organizations/create', viewModel);
+            viewData.setStatus('Error', error);
+            return response.render('organizations/create', viewData);
         }
         
-        workspaceService.addWorkspace(request.user, organization, function(error) {
+        workspaceService.addWorkspace(request.user, organization, function(error, workspace) {
             if (error) {
-                viewModel.errorMessage = error;
-                return response.render('organizations/create', viewModel);        
+                viewData.setStatus('Error', error);
+                return response.render('organizations/create', viewData);        
             }
+            
+            request.session.workspaces.push(workspace);
             
             if (request.body.defaultOrganization || !request.user.defaultOrganization) {
                 request.user.defaultOrganization = request.body.organizationName;
+                request.session.currentWorkspace = request.user.defaultOrganization;
+                
                 userService.updateUser(request.user, request.user, function(error) {
             
                     if (error) {
-                        viewModel.errorMessage = error;
-                        return response.render('organizations/create', viewModel); 
+                        viewData.setStatus('Error', error);
+                        return response.render('organizations/create', viewData); 
                     }       
                 });        
             }
@@ -98,6 +99,7 @@ router.post('/create', restrictRoute, function(request, response, next) {
     });
 });
 
+// Get organization page
 router.get('/:organizationName', function(request, response, next) {
     var organizationName = request.param('organizationName');
     organizationService.findOrganizationByName(organizationName, function(error, organization) {
@@ -109,14 +111,13 @@ router.get('/:organizationName', function(request, response, next) {
             return response.redirect('/error');
         }
         
-        viewModel.title = organization.name;
-        viewModel.className = 'organization';
-        viewModel.user = request.user ? request.user : null;
-        viewModel.workspaces = request.session.workspaces ? 
-            request.session.workspaces : null;
-        viewModel.organization = organization;
+        var viewData = viewModel({
+            title: organization.name,
+            className: 'organizations'
+        }, request.user, request.session);
         
-        response.render('organizations/organization', viewModel);
+        viewData.organization = organization;
+        response.render('organizations/organization', viewData);
     });
 });
 

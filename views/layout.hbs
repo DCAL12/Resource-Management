@@ -32,15 +32,13 @@
                 {{!-- Restricted links. These won't be shown unless the user is logged in --}} 
                 {{#if user}}
                     <li><a href="/organizations" title="Organizations">Organizations</a></li>
-                    <li>My Organizations</li>
+                    <li><a href="/workspace" title="Workspaces">Workspaces</a></li>
                         <ul>
-                    {{#if workspaces}}
                         {{#each workspaces}}
                             <li>
-                                <a href="/organizations/{{this.organization}}" title="{{this.organization}}">{{this.organization}}</a>    
+                                <a href="/workspace/{{this.organization}}" title="{{this.organization}}">{{this.organization}}</a>    
                             </li>
                         {{/each}}
-                    {{/if}}
                             <li><a href="/organizations/create" title="create new">create new</a></li>    
                         </ul>
                     <li><a href="/requests" title="My Requests">My Requests</a></li>
@@ -50,23 +48,6 @@
     </header>
 
     <main role="main" class="{{className}}">
-        <header>
-            <h2>{{title}}</h2>
-            
-            {{!-- Workspace tabs. These won't be shown unless the user is logged in and has a workspace selected--}} 
-            {{#if currentWorkspace}}
-            
-            <div id="currentRole">
-                <p>Current Role: {{currentRole}} | <a href="/organizations/requestAccess" title="Request Access">Request Access</a></p>    
-            </div>
-            
-            <nav role="navigation" class="workspaceNavigation">
-                <li><a href="/workspace" title="Assets">Assets</a></li>
-                <li><a href="/workspace" title="Requests">Requests</a></li>
-                <li><a href="/workspace" title="Timeline">Timeline</a></li>    
-            </nav>
-            {{/if}}
-        </header>
         {{{body}}}
     </main>
 

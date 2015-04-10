@@ -1,10 +1,6 @@
-// Core/NPM Dependencies
 var express = require('express'),
-    passport = require('passport');
-
-// Application modules
-var userService = require('../services/user-service'),
-    workspaceService = require('../services/workspace-service'),
+    passport = require('passport'),
+    userService = require('../services/user-service'),
     restrictRoute = require('../authentication/restrictRoute'),
     config = require('../config'),
     viewModel = require('../models/ViewModel');
@@ -13,7 +9,14 @@ var router = express.Router();
 
 // Get new user form
 router.get('/create', function (request, response, next) {
-    var viewData = viewModel({
+    var viewData = null;
+    
+    if (request.user) {
+        request.logout();
+    request.session.destroy();    
+    }
+    
+    viewData = viewModel({
         title: 'Create an Account',
         className: 'createAccount'
     }, request.user, request.session);
@@ -31,7 +34,7 @@ router.post('/create', function (request, response, next) {
             }, request.user, request.session);
 
             delete request.body.password;
-            viewData.setFormInput(request.body);
+            viewData.content = request.body;
             viewData.setStatus('Error', error);
 
             return response.render('users/create', viewData);
@@ -51,10 +54,10 @@ router.get('/', function (request, response, next) {
     var viewData = viewModel({
         title: 'Login',
         className: 'login'
-    }, null, null);
+    });
     
     delete request.body.password;
-    viewData.setFormInput(request.body);
+    viewData.content = request.body;
     viewData.setStatus('Error', request.flash('error'));
     
     response.render('users/login', viewData);
