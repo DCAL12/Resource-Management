@@ -1,79 +1,41 @@
-// Application modules
 var Organization = require('../models/OrganizationSchema').Organization,
-	resourceTypeService = require('./resourceType-service'),
-	resourceService = require('./resource-service'),
-	requestService = require('./request-service');
+	mongooseUtil = require('../util/mongoose-util');
+	
+var parseError = mongooseUtil.parseError;
 
-exports.addOrganization = function (organization, next) {
-	var newOrganization = {
-			name: organization.organizationName.toLowerCase(),
-			createdBy: organization.createdBy.toLowerCase()
-		};
-	Organization.create(newOrganization, function (error) {
+exports.add = function(organizationObject, next) {
+	Organization.create(organizationObject, function(error, organization) {
 		if (error) {
-			return next(error.toString()
-				.substring(
-					error.toString()
-					.indexOf(':') + 2
-				));
+			return next(parseError(error));
 		}
-		next(null, newOrganization);
+		next(null, organization);
 	});
 };
 
-exports.getOrganizations = function (next) {
-	Organization.find(null, function (error, organizations) {
-		next(error, organizations);
-	});
+exports.findById = function(organizationId, next) {
+	// return error, null, or organization object
+	Organization
+		.findById(organizationId, '_id name')
+		.exec(function(error, result) {
+			next(error, result);
+	});	
 };
 
-exports.findOrganizationByName = function (name, next) {
-	Organization.findOne({
-		name: name.toLowerCase()
-	}, function (error, organization) {
-		next(error, organization);
-	});
-};
-
-exports.getOrganizationInfo = function(organization, options, next) {
-	var organizationInfo = {},
-		errorMessage = null;
-	
-	// Get resource types 
-	if (options.resourceTypes) {
-		resourceTypeService.getResourceTypesByOrganization(organization, function(error, resourceTypes) {
-			if (error) {
-				errorMessage = error;
-			}
-			else {
-				organizationInfo.resourceTypes = resourceTypes;	
-			}
+exports.findByName = function(name, next) {
+	// return error, null, or organizationId
+	Organization
+		.findOne({ name: name.toLowerCase().trim()}, '_id name')
+		.exec(function (error, result) {
+			next(error, result);
 		});
-	}
-	
-	// Get Resources
-	if (options.resources) {
-		resourceService.getResourcesByOrganization(organization, function(error, resources) {
-			if (error) {
-				errorMessage = null ? error : errorMessage + error;
-			}
-			else {
-				organizationInfo.resources = resources;	
-			}
-		});	
-	}
-	
-	// Get Requests
-	if (options.requests) {
-		requestService.getRequestsByOrganization(organization, function(error, requests) {
-			if (error) {
-				errorMessage = null ? error : errorMessage + error;
-			}
-			else {
-				organizationInfo.requests = requests;	
-			}
-		});	
-	}
-	
-	next(errorMessage, organizationInfo);	
+};
+
+exports.findAll = function(next) {
+	// return error, null, or organizations
+	Organization
+		.find()
+		.select('name')
+		.exec(function (error, results) {
+			next(error, results);
+		});
 };

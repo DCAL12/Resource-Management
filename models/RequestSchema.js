@@ -1,14 +1,17 @@
 var mongoose = require('mongoose');
 
-var Schema = mongoose.Schema;
+var Schema = mongoose.Schema,
+	ObjectId = Schema.Types.ObjectId;
 
 var requestSchema = new Schema({
-	organization: {
-		type: String,
+	_organization: {
+		type: ObjectId,
+		ref: 'Organization',
 		required: 'An organization to request from is required'
 	},
-	resourceType: {
-		type: String, 
+	_resourceType: {
+		type: ObjectId,
+		ref: 'ResourceType' 
 	},
 	description: {
 		type: String, 

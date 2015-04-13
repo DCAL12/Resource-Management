@@ -1,30 +1,29 @@
+var Workspace = require('../models/WorkspaceSchema').Workspace,
+	mongooseUtil = require('../util/mongoose-util');
+	
+var parseError = mongooseUtil.parseError;
 
-var Workspace = require('../models/WorkspaceSchema').Workspace;
-
-exports.addWorkspace = function (user, organization, next) {
-	var newWorkspace = {
-			userName: user.email.toLowerCase(),
-			organization: organization.name.toLowerCase()
-		};
-	Workspace.create(newWorkspace, function (error) {
-		if (error) {
-			return next(error.toString()
-				.substring(
-					error.toString()
-					.indexOf(':') + 2
-				));
-		}
-		next(null, newWorkspace);
+exports.add = function (userId, organizationId, next) {
+	Workspace.create({
+		_user: userId,
+		_organization: organizationId
+		}, function (error, workspace) {
+			if (error) {
+				return next(parseError(error));
+			}
+			next();
 	});
 };
 
-exports.getUserWorkspaces = function (user, next) {
-	Workspace.find({
-		userName: user.email.toLowerCase()
-	}, function (error, workspaces) {
-		if (error) {
-			next(error, null);
-		}
-		next(null, workspaces);
+exports.getAllByUser = function (userId, next) {
+	Workspace
+		.find({_user: userId})
+		.select('_organization')
+		.populate('_organization')
+		.exec(function (error, results) {
+			if (error) {
+				next(error);
+			}
+			next(null, results);
 	});
 };

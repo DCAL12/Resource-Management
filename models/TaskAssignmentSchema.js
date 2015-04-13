@@ -1,19 +1,22 @@
 var mongoose = require('mongoose'),
 	uniqueValidator = require('mongoose-unique-validator');
 
-var Schema = mongoose.Schema;
+var Schema = mongoose.Schema,
+	ObjectId = Schema.Types.ObjectId;
 
 var taskAssignmentSchema = new Schema({
-	request_id: {
-		type: String, 
+	_request: {
+		type: ObjectId,
+		ref: 'Request',
 		required: 'A request id is required',
 	},
-	resourceType_id: {
-		type: String,
+	_resourceType: {
+		type: ObjectId,
+		ref: 'ResourceType',
 		required: 'A resource type id is required'
 	},
 	priority: {
-		type: String,
+		type: Number,
 	}
 });
 
@@ -21,7 +24,7 @@ taskAssignmentSchema.plugin(uniqueValidator, {
 	message: 'An identical task assignment already exists'
 });
 
-var TaskAssignment = mongoose.model('Resource', taskAssignmentSchema);
+var TaskAssignment = mongoose.model('TaskAssignment', taskAssignmentSchema);
 
 module.exports = { 
 	TaskAssignment: TaskAssignment

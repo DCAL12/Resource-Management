@@ -1,31 +1,25 @@
-var Resource = require('../models/ResourceSchema').Resource
+var ResourceType = require('../models/ResourceTypeSchema').ResourceType,
+	mongooseUtil = require('../util/mongoose-util');
+	
+var parseError = mongooseUtil.parseError;
 
-exports.addResource = function (resource, next) {
-	var newResource = {
-			name: resource.name.toLowerCase(),
-			resourceType: resource.resourceType.toLowerCase(),
-			organization: resource.organization.toLowerCase()
-		};
-		
-	Resource.create(newResource, function (error) {
+exports.add = function(resourceTypeId, resource, next) {
+	resourceTypeService.getByName()
+	
+	model.create(resource, function(error) {
 		if (error) {
-			return next(error.toString()
-				.substring(
-					error.toString()
-					.indexOf(':') + 2
-				));
+			return next(parseError(error));
 		}
-		next(null);
+		next();
 	});
 };
 
-exports.getResourcesByOrganization = function (organization, next) {
-	Resource.find({
-		organization: organization.name.toLowerCase()
-	}, function (error, resources) {
+exports.getAllByOrganizationId = function (organizationId, next) {
+	ResourceType.find({ _organization: organizationId }, '_id type',
+	function(error, results) {
 		if (error) {
-			next(error, null);
+			return next(error);
 		}
-		next(null, resources);
+		next(null, results);
 	});
 };

@@ -1,26 +1,25 @@
-// Application modules
-var Request = require('../models/RequestSchema').Request;
+var Request = require('../models/RequestSchema').Request,
+	mongooseUtil = require('../util/mongoose-util');
+	
+var parseError = mongooseUtil.parseError;
 
-exports.addRequest = function (request, next) {
+exports.add = function (request, next) {
 	Request.create(request, function (error) {
 		if (error) {
-			return next(error.toString()
-				.substring(
-					error.toString()
-					.indexOf(':') + 2
-				));
+			return next(parseError(error));
 		}
 		next(null);
 	});
 };
 
-exports.getRequestsByOrganization = function (organization, next) {
+exports.getAllByOrganizationId = function (organizationId, next) {
+	// return error, null, or request array
 	Request.find({
-		organization: organization.name.toLowerCase()
-	}, function (error, requests) {
+		organization: organizationId
+	}, function (error, results) {
 		if (error) {
 			next(error, null);
 		}
-		next(null, requests);
+		next(null, results);
 	});
 };

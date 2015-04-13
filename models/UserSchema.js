@@ -1,7 +1,8 @@
 var mongoose = require('mongoose'),
 	uniqueValidator = require('mongoose-unique-validator');
 
-var Schema = mongoose.Schema;
+var Schema = mongoose.Schema,
+	ObjectId = Schema.Types.ObjectId;
 
 var userSchema = new Schema({
 	firstName: {
@@ -15,14 +16,17 @@ var userSchema = new Schema({
 	email: {
 		type: String, 
 		required: 'Email is required',
-		unique: true
+		unique: true,
+		lowercase: true,
+		trim: true
 	},
 	password: {
 		type: String, 
 		required: 'Password is required'
 	},
-	defaultOrganization: {
-		type: String	
+	_defaultOrganization: {
+		type: ObjectId,
+		ref: 'Organization',	
 	},
 	createdOn: {
 		type: Date, 

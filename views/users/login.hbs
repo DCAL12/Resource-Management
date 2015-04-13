@@ -1,19 +1,19 @@
 <header>
 	<h2>{{title}}</h2> 
 	
-	{{#if statusMessage}} {{!-- status will be null, 'Success', or 'Error' --}}
-        <p class="{{status}}"><strong>{{status}}:&nbsp</strong>{{statusMessage}}</p>
+	{{#if status.label}} {{!-- status will be null, 'Success', or 'Error' --}}
+        <p class="{{status.label}}"><strong>{{status.label}}:&nbsp</strong>{{status.message}}</p>
     {{/if}}
 </header>
 
-<form name="login" method="post" action="users/login">
+<form name="login" method="post" action="/users/login">
     <label for="email">Email</label>
     <input type="email" id="email" name="email" value="{{content.email}}" required>
     <label for="password">Password</label>
     <input type="password" id="password" name="password" required>
     
-    {{#if cookieConfig.cookieMaxAgeDays}}
-            <label for="stayLoggedIn">Keep me logged in for {{cookieConfig.cookieMaxAgeDays}} days</label>
+    {{#if siteInfo.cookieMaxAgeDays}}
+            <label for="stayLoggedIn">Keep me logged in for {{siteInfo.cookieMaxAgeDays}} days</label>
             <input type="checkbox" id="stayLoggedIn" name="stayLoggedIn">
     {{/if}}
     

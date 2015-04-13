@@ -7,10 +7,23 @@ var organizationSchema = new Schema({
 	name: {
 		type: String, 
 		required: 'A unique organization name is required',
-		unique: true
+		unique: true,
+		lowercase: true,
+		trim: true
+	},
+	settings: {
+		defaultAccess: {
+			type: String,
+			lowercase: true,
+			trim: true,
+			enum: ['guest', 'viewer', 'requestor', 'manager', 'owner'],
+			default: 'guest'
+		}	
 	},
 	createdBy: {
-		type: String
+		type: String,
+		lowercase: true,
+		trim: true
 	},
 	createdOn: {
 		type: Date, 

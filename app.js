@@ -20,7 +20,6 @@ var index = require('./routes/index'),
 
 var app = express();
 app.locals.siteInfo = config.siteInfo;
-app.locals.cookieConfig = config.cookies;
 
 // Module setup
 passportConfig();
@@ -59,38 +58,28 @@ app.use(function (request, response, next) {
 });
 
 // Error Handlers
-var viewModel = {
+var viewData = {
     title: 'Error',
-    className: 'error',
+    className: 'error'
 };
-    
+
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
     app.use(function(error, request, response, next) {
         response.status(error.status || 500);
-    
-        viewModel.user = request.user ? request.user : null;
-        viewModel.workspaces = request.session.workspaces ? 
-            request.session.workspaces : null;
-        viewModel.message = error.message;
-        viewModel.error = error;
-        
-        response.render('error', viewModel);
-  });
+        viewData.message = error.message;
+        viewData.error = error;
+        response.render('error', viewData);
+    });
 }
 
 // production error handler
 // no stacktraces leaked to user
 app.use(function(error, request, response, next) {
     response.status(error.status || 500);
-    
-    viewModel.user = request.user ? request.user : null;
-    viewModel.workspaces = request.session.workspaces ? 
-        request.session.workspaces : null;
-    viewModel.message = error.message;
-    
-    response.render('error', viewModel);
+    viewData.message = error.message;
+    response.render('error', viewData);
 });
 
 module.exports = app;

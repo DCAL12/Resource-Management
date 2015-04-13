@@ -1,14 +1,17 @@
 var mongoose = require('mongoose');
 
-var Schema = mongoose.Schema;
+var Schema = mongoose.Schema,
+	ObjectId = Schema.Types.ObjectId;
 
 var workspaceSchema = new Schema({
-	userName: {
-		type: String, 
-		required: 'A username is required'
+	_user: {
+		type: ObjectId,
+		ref: 'User', 
+		required: 'A user id is required'
 	},
-	organization: {
-		type: String,
+	_organization: {
+		type: ObjectId,
+		ref: 'Organization',
 		required: 'An organization is required'
 	},
 	createdOn: {

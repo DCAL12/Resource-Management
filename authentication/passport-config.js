@@ -2,44 +2,43 @@
 var bcrypt = require('bcrypt');
 
 module.exports = function() {
-	var passport = require('passport');
-	var passport_local = require('passport-local');
-	var userService = require('../services/user-service');
-	var config = require('../config');
+	var passport = require('passport'),
+		LocalStrategy = require('passport-local').Strategy,
+		userService = require('../services/user-service');
 	
-	passport.use(new passport_local.Strategy({
-			usernameField: config.siteInfo.usernameField
-		}, function(email, password, next) {
-			userService.findUserByEmail(email, function(error, user) {
+	passport.use(new LocalStrategy({
+		usernameField: 'email'
+		}, function(loginUserName, loginPassword, next) {
+			userService.authenticate(loginUserName, function(error, userCredentials) {
 				if (error) {
 					return next(error);
 				}	
-				if (!user) {
-					return next(null, null);
+				if (!userCredentials) {
+					return next();
 				}
-				bcrypt.compare(password, user.password, function(error, isMatched) {
+				bcrypt.compare(loginPassword, userCredentials.password, function(error, isMatched) {
 					if (error) {
 						return next(error);
 					}
 					
 					if (!isMatched) {
-						return next(null, null);
+						return next();
 					}
-					
-					return next(null, user); // user is authenticated
+					console.log('authenticated: ' + userCredentials._id);
+					return next(null, userCredentials); // user is authenticated
 				});
 			});
 	}));
 	
-	passport.serializeUser(function(authenticatedUser, next) {
-		// write the userName to the session
-		next(null, authenticatedUser.email);
+	passport.serializeUser(function(user, next) {
+		// write the userId to the session
+		next(null, user._id);
 	});
 	
-	passport.deserializeUser(function(userName, next) {
+	passport.deserializeUser(function(userId, next) {
 		// get properties of the current user
-		userService.findUserByEmail(userName, function(error, authenticatedUser) {
-			next(error, authenticatedUser);
+		userService.findById(userId, function(error, userInfo) {
+			next(error, userInfo);
 		});
 	});
 };
