@@ -3,23 +3,81 @@ var ResourceType = require('../models/ResourceTypeSchema').ResourceType,
 	
 var parseError = mongooseUtil.parseError;
 
-exports.add = function(resourceTypeId, resource, next) {
-	resourceTypeService.getByName()
-	
-	model.create(resource, function(error) {
-		if (error) {
-			return next(parseError(error));
-		}
-		next();
-	});
+exports.getAllByOrganizationId = function(organizationId, next) {
+	ResourceType
+		.find({ _organization: organizationId })
+		.select('model')
+		.exec(function(error, Models) {
+			var collections = [];
+			
+			if (error) {
+				return next(parseError(error));
+			}
+			
+			Models.forEach(function(model) {
+				model.findAll(function(error, documents) {
+					if(error) {
+						return next(parseError(error));
+					}
+					collections.push(documents);
+				});	
+			});
+			next(null, collections);
+		});
 };
 
-exports.getAllByOrganizationId = function (organizationId, next) {
-	ResourceType.find({ _organization: organizationId }, '_id type',
-	function(error, results) {
-		if (error) {
-			return next(error);
-		}
-		next(null, results);
-	});
+exports.add = function(resourceTypeId, data, next) {
+	ResourceType
+		.findById(resourceTypeId)
+		.select('model')
+		.exec(function(error, Model) {
+			if (error) {
+				return next(parseError(error));
+			}
+			Model.create(data, function(error) {
+				if (error) {
+					return next(parseError(error));
+				}
+				next();	
+			});	
+		});
 };
+
+exports.update = function(resourceTypeId, resourceId, data, next) {
+	ResourceType
+		.findById(resourceTypeId)
+		.select('model')
+		.exec(function(error, Model) {
+			if (error) {
+				return next(parseError(error));
+			}
+			Model
+				.findByIdAndUpdate(resourceId, data)
+				.exec(function(error) {
+					if (error) {
+						return next(parseError(error));
+					}
+					next();
+				});		
+		});	
+};
+
+exports.delete = function(resourceTypeId, resourceId, next) {
+	ResourceType
+		.findById(resourceTypeId)
+		.select('model')
+		.exec(function(error, Model) {
+			if (error) {
+				return next(parseError(error));
+			}
+			Model
+				.findByIdAndRemove(resourceId)
+				.exec(function(error) {
+					if (error) {
+						return next(parseError(error));
+					}
+					next(null);
+				});		
+		});	
+};
+

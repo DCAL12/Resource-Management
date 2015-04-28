@@ -1,6 +1,5 @@
 var express = require('express'),
     passport = require('passport'),
-    viewService = require('../services/view-service'),
     userService = require('../services/user-service'),
     sessionService = require('../services/session-service'),
     restrictRoute = require('../authentication/restrictRoute');
@@ -26,26 +25,24 @@ router.get('/create', function (request, response, next) {
 
 // Submit new user form
 router.post('/create', function (request, response, next) {
-    userService.addUser(request.body, function (error) {
+    userService.add(request.body, function (error) {
         if (error) {
             var viewData = {
                 title: 'Create an Account',
-                className: 'createAccount'
+                className: 'createAccount',
+                content: request.body,
+                status: {
+                    label: 'Error',
+                    message: error    
+                }
             };
-
             delete request.body.password;
-            viewData.content = request.body;
-            viewData.status = {
-                label: 'Error',
-                message: error
-            };
-
             return response.render('users/create', viewData);
         }
 
         request.login(request.body, function (error) {
             if (error) {
-                response.redirect('/users');
+                return response.redirect('/users');
             }
             response.redirect('/workspace');
         });
@@ -103,61 +100,30 @@ router.post('/login', function (request, response, next) {
 router.get('/account', restrictRoute, function (request, response, next) {
     var viewData = {
         title: 'My Account',
-        className: 'account'
+        className: 'account',
+        user: request.user
     };
-    
-    viewService.addUserInfo(request.user, viewData, function(viewData) {
-            response.render('users/account', viewData);
-    });
+    response.render('users/account', viewData);
 });
 
 // Update user profile
 router.post('/update', function (request, response, next) {
-    userService.updateUser(request.user, request.body, function (error, user) {
+    userService.update(request.user, request.body, function (error, user) {
         var viewData = {
             title: 'My Account',
-            className: 'account'
+            className: 'account',
+            user: request.user
         };
-        
-        viewService.addUserInfo(request.user, viewData, function(viewData) {
             
-            if (error) {
-                viewData.status = {
-                    label: 'Error',
-                    message: error
-                };
-                return response.render('users/account', viewData);
-            }
-            
-            request.login(user, function (error) {
-                if (error) {
-                    viewData.status = {
-                        label: 'Error',
-                        message: error
-                    };
-                    return response.render('users/account', viewData);
-                }
-                
-                viewData.status = {
-                    label: 'Success',
-                    message: 'Your profile has been updated!'
-                };
-                response.render('users/account', viewData);
-            });
-        });
-    });
-});
-
-// Change password
-router.post('/change-password', function (request, response, next) {
-    userService.changePassword(request.user, request.body.password, function (error) {
-        var viewData = {
-            title: 'My Account',
-            className: 'account'
-        };
+        if (error) {
+            viewData.status = {
+                label: 'Error',
+                message: error
+            };
+            return response.render('users/account', viewData);
+        }
         
-        viewService.addUserInfo(request.user, viewData, function(viewData) {
-
+        request.login(user, function (error) {
             if (error) {
                 viewData.status = {
                     label: 'Error',
@@ -168,10 +134,34 @@ router.post('/change-password', function (request, response, next) {
             
             viewData.status = {
                 label: 'Success',
-                message: 'Your password has been updated'
+                message: 'Your profile has been updated!'
             };
             response.render('users/account', viewData);
         });
+    });
+});
+
+// Change password
+router.post('/change-password', function (request, response, next) {
+    userService.changePassword(request.user, request.body.password, function (error) {
+        var viewData = {
+            title: 'My Account',
+            className: 'account',
+        };
+        
+        if (error) {
+            viewData.status = {
+                label: 'Error',
+                message: error
+            };
+            return response.render('users/account', viewData);
+        }
+        
+        viewData.status = {
+            label: 'Success',
+            message: 'Your password has been updated'
+        };
+        response.render('users/account', viewData);
     });
 });
 

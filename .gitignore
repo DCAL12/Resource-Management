@@ -26,14 +26,11 @@ build/Release
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
 node_modules
 
-# Data directory
-data
+# Test data directory
+test/data
 
 # IDE files
 .idea
 *.iml
 .git
 .c9
-
-# Local script files
-.mongod-start

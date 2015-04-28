@@ -11,12 +11,14 @@ var express = require('express'),
     connectMongo = require('connect-mongo');
 
 // Application modules
-var index = require('./routes/index'),
+var config = require('./config'),
+    passportConfig = require('./authentication/passport-config'),
+    index = require('./routes/index'),
     users = require('./routes/users'),
-    workspace = require('./routes/workspace'),
     organizations = require('./routes/organizations'),
-    config = require('./config'),
-    passportConfig = require('./authentication/passport-config');
+    workspace = require('./routes/workspace'),
+    api = require('./routes/api');
+    
 
 var app = express();
 app.locals.siteInfo = config.siteInfo;
@@ -47,8 +49,9 @@ app.use(passport.session());
 // Routes
 app.use('/', index);
 app.use('/users', users);
-app.use('/workspace', workspace);
 app.use('/organizations', organizations);
+app.use('/workspace', workspace);
+app.use('/api', api);
 
 // Catch 404 and forward to error handler
 app.use(function (request, response, next) {

@@ -1,0 +1,13 @@
+
+
+<section>
+	<h3>Available Organizations</h3>
+	<strong ng-show="!viewModel.organizations">Loading...</strong>
+	<ul>
+		<li ng-repeat="organization in viewModel.organizations | orderBy: 'name'">
+			<a ng-href="#/org/{{organization._id}}" 
+				ng-bind="organization.name">
+			</a>
+		</li>
+	</ul>	
+</section>

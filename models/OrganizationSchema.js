@@ -11,13 +11,17 @@ var organizationSchema = new Schema({
 		lowercase: true,
 		trim: true
 	},
+	description: {
+		type: String,
+		required: 'A brief description is required'
+	},
 	settings: {
 		defaultAccess: {
 			type: String,
 			lowercase: true,
 			trim: true,
-			enum: ['guest', 'viewer', 'requestor', 'manager', 'owner'],
-			default: 'guest'
+			enum: ['none', 'viewer', 'requestor', 'manager', 'owner'],
+			default: 'viewer'
 		}	
 	},
 	createdBy: {

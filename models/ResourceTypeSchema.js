@@ -1,6 +1,6 @@
 var mongoose = require('mongoose'),
 	schemaGenerator = require('mongoose-gen'),
-	Attribute = require('./AttributeSchema'),
+	AttributeSchema = require('./AttributeSchema'),
 	resourceTypeService = require('../services/resourceType-service'),
 	uniqueValidator = require('mongoose-unique-validator');
 
@@ -17,7 +17,7 @@ var resourceTypeSchema = new Schema({
 		type: String, 
 		required: 'A unique type name is required',
 	},
-	attributes: [Attribute],
+	attributes: [AttributeSchema],
 	
 	model: {}
 });

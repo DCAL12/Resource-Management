@@ -25,13 +25,13 @@ var Attribute = new Schema({
 	required: {
 		type: Boolean,
 		default: false
-	},
-	min: {
-		type: Number
-	},
-	max: {
-		type: Number
-	}	
+	}
+	// min: {
+	// 	type: Number
+	// },
+	// max: {
+	// 	type: Number
+	// }	
 });
 
 Attribute.plugin(uniqueValidator, {

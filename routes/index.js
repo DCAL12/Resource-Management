@@ -1,5 +1,4 @@
 var express = require('express'),
-    viewService = require('../services/view-service'),
     restrictRoute = require('../authentication/restrictRoute');
     
 var router = express.Router();
@@ -21,13 +20,11 @@ router.get('/welcome', restrictRoute, function(request, response, next) {
     var viewData = {
         title: 'Welcome ' + (request.user.firstName ? 
             request.user.firstName : ''),
-        className: 'welcome'        
+        className: 'welcome',
+        user: request.user
+        
     };
-    
-    viewService.addUserInfo(request.user, viewData, 
-        function(viewData) {
-            response.render('index', viewData);
-        });
+    response.render('index', viewData);
 });
 
 router.get('/login', function(request, response, next) {

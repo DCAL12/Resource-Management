@@ -1,5 +1,6 @@
 // Core/NPM Dependencies
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcrypt'),
+	workspaceService = require('../services/workspace-service');
 
 module.exports = function() {
 	var passport = require('passport'),
@@ -24,7 +25,6 @@ module.exports = function() {
 					if (!isMatched) {
 						return next();
 					}
-					console.log('authenticated: ' + userCredentials._id);
 					return next(null, userCredentials); // user is authenticated
 				});
 			});
@@ -38,7 +38,18 @@ module.exports = function() {
 	passport.deserializeUser(function(userId, next) {
 		// get properties of the current user
 		userService.findById(userId, function(error, userInfo) {
-			next(error, userInfo);
+			if (error) {
+				return next(error);
+			}
+			// Join the user's available workspaces
+			workspaceService.getAllByUser(userId, 
+				function(error, organizationNames) {
+		    		if (error || !organizationNames.length > 0) {
+		        		return next(error, userInfo);
+		       		}
+		       		userInfo.workspaces = organizationNames;
+      				return next(null, userInfo);
+			});
 		});
 	});
 };

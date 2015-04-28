@@ -3,8 +3,19 @@ var Request = require('../models/RequestSchema').Request,
 	
 var parseError = mongooseUtil.parseError;
 
-exports.add = function (request, next) {
-	Request.create(request, function (error) {
+exports.getAllByOrganizationId = function(organizationId, next) {
+	Request
+		.find({ _organization: organizationId })
+		.exec(function (error, requests) {
+			if (error) {
+				return next(parseError(error));
+			}
+			next(null, requests);
+	});
+};
+
+exports.add = function(organizationId, data, next) {
+	Request.create(data, function (error) {
 		if (error) {
 			return next(parseError(error));
 		}
@@ -12,14 +23,30 @@ exports.add = function (request, next) {
 	});
 };
 
-exports.getAllByOrganizationId = function (organizationId, next) {
-	// return error, null, or request array
-	Request.find({
-		organization: organizationId
-	}, function (error, results) {
-		if (error) {
-			next(error, null);
-		}
-		next(null, results);
-	});
+exports.update = function(requestId, data, next) {
+	Request
+		.findByIdAndUpdate(requestId, { $set: {
+			description: data.description,
+			startTime: data.startTime,
+			endTime: data.endTime,
+			location: data.location
+		}})
+		.exec(function(error) {
+			if (error) {
+				return next(parseError(error));
+			}
+			next();
+		});	
 };
+
+exports.delete = function(requestId, next) {
+	Request
+		.findByIdAndRemove(requestId)
+		.exec(function(error) {
+			if (error) {
+				return next(parseError(error));
+			}
+			next();
+		});	
+};
+
