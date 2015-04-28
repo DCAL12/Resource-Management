@@ -11,13 +11,13 @@ var express = require('express'),
     connectMongo = require('connect-mongo');
 
 // Application modules
-var config = require('./config'),
-    passportConfig = require('./authentication/passport-config'),
-    index = require('./routes/index'),
+var index = require('./routes/index'),
     users = require('./routes/users'),
     organizations = require('./routes/organizations'),
     workspace = require('./routes/workspace'),
-    api = require('./routes/api');
+    api = require('./routes/api'),
+    config = require('./config'),
+    passportConfig = require('./authentication/passport-config');
     
 
 var app = express();

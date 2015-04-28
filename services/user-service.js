@@ -96,6 +96,6 @@ exports.authenticate = function(email, next) {
 			if (error) {
 				return next(parseError(error));
 			}
-			next(userCredentials);
+			next(null, userCredentials);
 	});
 };
