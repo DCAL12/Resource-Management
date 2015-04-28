@@ -12,7 +12,7 @@ exports.findById = function(userId, next) {
 			if (error) {
 				return next(parseError(error));
 			}
-			next(userInfo);
+			next(null, userInfo);
 	});
 };
 
@@ -24,7 +24,7 @@ exports.findByEmail = function(email, next) {
 			if (error) {
 				return next(parseError(error));
 			}
-			next(userInfo);
+			next(null, userInfo);
 	});
 };
 

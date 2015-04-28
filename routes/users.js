@@ -60,7 +60,7 @@ router.get('/', function (request, response, next) {
 
 // Submit login
 router.post('/login', function (request, response, next) {
-    passport.authenticate('local', function(error, user, info) {
+    passport.authenticate('local', function(error, user) {
         var viewData = {
             title: 'Login',
             className: 'login'
@@ -71,7 +71,7 @@ router.post('/login', function (request, response, next) {
         if (error || !user) {
             viewData.status = { 
                 label: 'Error',
-                message: error 
+                message: 'The username or password is incorrect' 
             };
             return response.render('users/login', viewData);
         }
