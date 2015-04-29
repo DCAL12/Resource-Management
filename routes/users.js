@@ -6,170 +6,176 @@ var express = require('express'),
 
 var router = express.Router();
 
-// Get new user form
-router.get('/create', function (request, response, next) {
-    var viewData = null;
-    
-    if (request.user) {
-        request.logout();
-        request.session.destroy();    
-    }
-    
-    viewData = {
-        title: 'Create an Account',
-        className: 'createAccount'
-    };
-
-    response.render('users/create', viewData);
+router.get('/', restrictRoute, function(request, response, next) {
+    response.redirect('/users/account');
 });
 
-// Submit new user form
-router.post('/create', function (request, response, next) {
-    userService.add(request.body, function (error) {
-        if (error) {
-            var viewData = {
-                title: 'Create an Account',
-                className: 'createAccount',
-                content: request.body,
-                status: {
-                    label: 'Error',
-                    message: error    
-                }
-            };
-            delete request.body.password;
-            return response.render('users/create', viewData);
+router.route('/create')
+    .get(function(request, response, next) {
+        var viewModel = null;
+        
+        if (request.user) {
+            request.logout();
+            request.session.destroy();    
         }
+        
+        viewModel = {
+            title: 'Create an Account',
+            className: 'createAccount'
+        };
+    
+        response.render('users/create', viewModel);
+    })
 
-        request.login(request.body, function (error) {
+    .post(function (request, response, next) {
+        userService.add(request.body, function(error) {
             if (error) {
-                return response.redirect('/users');
+                var viewModel = {
+                    title: 'Create an Account',
+                    className: 'createAccount',
+                    content: request.body,
+                    status: {
+                        label: 'Error',
+                        message: error    
+                    }
+                };
+                delete request.body.password;
+                return response.status(500).render('users/create', viewModel);
             }
-            response.redirect('/workspace');
+    
+            request.login(request.body, function(error) {
+                if (error) {
+                    return response.status(500).redirect('/users');
+                }
+                response.redirect('/workspace');
+            });
         });
     });
-});
 
-// Go to login
-router.get('/', function (request, response, next) {
-    var viewData = {
-        title: 'Login',
-        className: 'login'
-    };
-    response.render('users/login', viewData);
-});
-
-// Submit login
-router.post('/login', function (request, response, next) {
-    passport.authenticate('local', function(error, user) {
-        var viewData = {
+router.route('/login')
+    .get(function(request, response, next) {
+        var viewModel = {
             title: 'Login',
             className: 'login'
         };
-        delete request.body.password;
-        viewData.content = request.body;
-        
-        if (error || !user) {
-            viewData.status = { 
-                label: 'Error',
-                message: 'The username or password is incorrect' 
-            };
-            return response.render('users/login', viewData);
-        }
-        delete user.password;
-        request.logIn(user, function(error) {
-            if (error) {
-                console.log(error);
-                viewData.status = {
-                    label: 'Error',
-                    message: error
-                };
-                return response.render('users/login', viewData);
-            }
-            
-            // set session information
-            if (request.body.stayLoggedIn) {
-                sessionService.setCookieMaxAge(request.session);
-            }
-            
-            response.redirect('/workspace');
-        });
-    })(request, response, next);
-});
+        response.render('users/login', viewModel);
+    })
 
-// Go to account information
-router.get('/account', restrictRoute, function (request, response, next) {
-    var viewData = {
+    .post(function (request, response, next) {
+        passport.authenticate('local', function(error, user) {
+            var viewModel = {
+                title: 'Login',
+                className: 'login'
+            };
+            delete request.body.password;
+            viewModel.content = request.body;
+            
+            if (error || !user) {
+                viewModel.status = { 
+                    label: 'Error',
+                    message: 'The username or password is incorrect' 
+                };
+                return response.status(500).render('users/login', viewModel);
+            }
+            delete user.password;
+            request.logIn(user, function(error) {
+                if (error) {
+                    console.log(error);
+                    viewModel.status = {
+                        label: 'Error',
+                        message: error
+                    };
+                    return response.status(500).render('users/login', viewModel);
+                }
+                
+                // set session information
+                if (request.body.stayLoggedIn) {
+                    sessionService.setCookieMaxAge(request.session);
+                }
+                response.redirect('/workspace');
+            });
+        })(request, response, next);
+    });
+
+router.get('/account', restrictRoute, function(request, response, next) {
+    var viewModel = {
         title: 'My Account',
         className: 'account',
         user: request.user
     };
-    response.render('users/account', viewData);
+    response.render('users/account', viewModel);
 });
 
-// Update user profile
-router.post('/update', function (request, response, next) {
-    userService.update(request.user, request.body, function (error, user) {
-        var viewData = {
+router.put('/update', restrictRoute, function(request, response, next) {
+    userService.update(request.user, request.body, function(error, user) {
+        var viewModel = {
             title: 'My Account',
             className: 'account',
             user: request.user
         };
             
         if (error) {
-            viewData.status = {
+            viewModel.status = {
                 label: 'Error',
                 message: error
             };
-            return response.render('users/account', viewData);
+            return response.status(500).render('users/account', viewModel);
         }
         
-        request.login(user, function (error) {
+        request.login(user, function(error) {
             if (error) {
-                viewData.status = {
+                viewModel.status = {
                     label: 'Error',
                     message: error
                 };
-                return response.render('users/account', viewData);
+                return response.status(500).render('users/account', viewModel);
             }
             
-            viewData.status = {
+            viewModel.status = {
                 label: 'Success',
                 message: 'Your profile has been updated!'
             };
-            response.render('users/account', viewData);
+            response.render('users/account', viewModel);
         });
     });
 });
 
-// Change password
-router.post('/change-password', function (request, response, next) {
+router.put('/change-password', restrictRoute, function(request, response, next) {
     userService.changePassword(request.user, request.body.password, function (error) {
-        var viewData = {
+        var viewModel = {
             title: 'My Account',
             className: 'account',
         };
         
         if (error) {
-            viewData.status = {
+            viewModel.status = {
                 label: 'Error',
                 message: error
             };
-            return response.render('users/account', viewData);
+            return response.status(500).render('users/account', viewModel);
         }
         
-        viewData.status = {
+        viewModel.status = {
             label: 'Success',
             message: 'Your password has been updated'
         };
-        response.render('users/account', viewData);
+        response.render('users/account', viewModel);
     });
 });
 
-// Logout
-router.get('/logout', function (request, response, next) {
+router.delete('/account', restrictRoute, function(request, response, next) {
+    userService.delete(request.user._id, function (error) {
+        if (error) {
+            return response.status(500).json({ error: 'Failed to delete the user' });
+        }
+        response.json({ success: true });
+    });
+});
+
+router.get('/logout', function(request, response, next) {
     request.logout();
     request.session.destroy();
-    response.redirect('/users');
+    response.redirect('/users/login');
 });
 
 module.exports = router;

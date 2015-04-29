@@ -30,15 +30,14 @@ router.post('/create', function(request, response, next) {
         user: request.user
     };
     viewData.content = request.body;
-        
-    request.body.createdBy = request.user.email;
+
     organizationService.add(request.body, function(error, organizationId) {
         if (error) {
             viewData.status = {
                 label: 'Error',
                 message: error
             };
-            return response.render('organizations/create', viewData);
+            return response.status(500).render('organizations/create', viewData);
         }
         
         workspaceService.add(request.user._id, organizationId, function(error) {
@@ -47,7 +46,7 @@ router.post('/create', function(request, response, next) {
                     label: 'Error',
                     message: error
                 };
-                return response.render('organizations/create', viewData);        
+                return response.status(500).render('organizations/create', viewData);        
             }
             
             if (request.body.defaultOrganization || !request.user._defaultOrganization) {
@@ -60,11 +59,11 @@ router.post('/create', function(request, response, next) {
                             label: 'Error',
                             message: error
                         };
-                        return response.render('organizations/create', viewData); 
+                        return response.status(500).render('organizations/create', viewData); 
                     }       
                 });        
             }
-            response.redirect('/workspace#/org/' + organizationId);
+            response.status(200).redirect('/workspace#/org/' + organizationId);
         });
     });
 });

@@ -22,6 +22,10 @@ var Attribute = new Schema({
 		default: 'String',
 		required: 'A data type is required'
 	},
+	unique: {
+		type: Boolean,
+		default: false
+	},
 	required: {
 		type: Boolean,
 		default: false

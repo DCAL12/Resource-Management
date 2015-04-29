@@ -10,7 +10,7 @@
 <section>
 <h3>Update Profile</h3>
 
-<form name="modifyUser" method="post" action="update">
+<form name="modifyUser" method="put" action="update">
     <label for="firstName">First Name</label>
     <input type="text" id="firstName" name="firstName" value="{{user.firstName}}" required>
     <label for="lastName">Last Name</label>
@@ -40,7 +40,7 @@
 
 <section>
 <h3>Change Password</h3>
-<form name="changePassword" method="post" action="change-password">
+<form name="changePassword" method="put" action="change-password">
     <label for="password">New Password</label>
     <input type="password" id="password" name="password" required>
     <label for="password">Confirm Password</label>

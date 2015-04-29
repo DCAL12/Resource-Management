@@ -1,19 +1,15 @@
 var express = require('express'),
-    restrictRoute = require('../authentication/restrictRoute');
+    restrictRoute = require('../authentication/restrictRoute'),
+    config = require('../config.js');
     
 var router = express.Router();
 
 // Get Default/Home Page
 router.get('/', function(request, response, next) {
-    var viewData = {
-        title: 'Welcome to Resource Management',
-        className: 'default'        
-    };
-    
     if (request.user) {
         return response.redirect('/welcome');
     }
-    response.render('index', viewData);
+    response.render('index');
 });
 
 router.get('/welcome', restrictRoute, function(request, response, next) {

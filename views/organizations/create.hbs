@@ -6,6 +6,8 @@
 <form name="createOrganization" method="post">
     <label for="organizationName">Organization Name</label>
     <input type="text" id="organizationName" name="name" value="{{content.name}}" required>
+    <label for="description">Description</label>
+    <input type="text" id="description" name="description" value="{{content.description}}" required>
     <label for="defaultOrganization">Make this my default workspace</label>
     <input type="checkbox" id="defaultOrganization" name="defaultOrganization" value="true" checked>
     <input type="submit" value="Create">

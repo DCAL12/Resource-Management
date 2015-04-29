@@ -51,12 +51,7 @@ exports.add = function(user, next) {
 
 exports.update = function(user, update, next) {
 	User
-		.findByIdAndUpdate(user._id, { $set: {
-			firstName: update.firstName,
-			lastName: update.lastName,
-			email: update.email.toLowerCase(),
-			defaultOrganization: update._defaultOrganization
-		}})
+		.findByIdAndUpdate(user._id, update)
 		.exec(function(error, userDocument) {
 			if (error) {
 				return next(parseError(error));
@@ -86,6 +81,17 @@ exports.changePassword = function(user, newPassword, next) {
 				});
 			});
 	});
+};
+
+exports.delete = function(userId, next) {
+	User
+		.findByIdAndRemove(userId)
+		.exec(function(error) {
+			if (error) {
+				return next(parseError(error));
+			}
+			next();
+		});	
 };
 
 exports.authenticate = function(email, next) {

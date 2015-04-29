@@ -14,10 +14,13 @@ var workspaceSchema = new Schema({
 		ref: 'Organization',
 		required: 'An organization is required'
 	},
-	createdOn: {
-		type: Date, 
-		default: Date.now
-	}
+	role: {
+		type: String,
+		lowercase: true,
+		trim: true,
+		enum: ['viewer', 'requestor', 'manager', 'owner'],
+		default: 'viewer'
+		}
 });
 
 var Workspace = mongoose.model('Workspace', workspaceSchema);

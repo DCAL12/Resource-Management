@@ -2,9 +2,8 @@ var app = require('../app'),
 	should = require('should'),
 	agent = require('supertest').agent(app),
 	login = require('./login'),
-	testOrg = {
-			name: 'testOrg' + Date.now()
-		};
+	testOrg = require('./data/dbInput').testData.organization,
+	persistentData = require('./data/dbInput').persistentData;
 	
 describe('organizations', function() {
 		
@@ -17,29 +16,29 @@ describe('organizations', function() {
 		});
 	});
 
-	it('should add create testOrg', function(done) {
+	it('should create a test organization', function(done) {
 		agent
 			.post('/organizations/create')
+			.expect(302)
 			.send(testOrg)
 			.end(function(error, response) {
 				if (error) {
 					throw error;
 				}
-				
-				agent
-					.get('/organizations/json/');
+				response.status.should.equal(302);
+				console.log(response);
 				done();
 			});
 	});
 	
-	it('should get details for testorgstatic', function(done) {
+	it('should get details for an organization', function(done) {
 	    agent
-			.get('/api/organizations/553f04e076d76db463e8d3d3')
+			.get('/api/organizations/' + persistentData.organizations[0]._id)
 			.expect(200)
 			.expect('Content-Type', /json/)
 			.end(function(error, response) {
 				response.status.should.equal(200);
-				response.body.should.have.property('name', 'testorgstatic');
+				response.body.should.have.property('name', persistentData.organizations[0].name);
 				done();
 			});
 	});
@@ -48,6 +47,7 @@ describe('organizations', function() {
 		agent
 			.get('/api/organizations/')
 			.expect(200)
+			.expect('Content-Type', /json/)
 			.end(function(error, response) {
 				response.status.should.equal(200);
 				response.body.should.not.equal(null);

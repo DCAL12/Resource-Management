@@ -1,7 +1,8 @@
 var mongoose = require('mongoose'),
 	uniqueValidator = require('mongoose-unique-validator');
 
-var Schema = mongoose.Schema;
+var Schema = mongoose.Schema,
+	ObjectId = Schema.Types.ObjectId;
 
 var organizationSchema = new Schema({
 	name: {
@@ -24,10 +25,9 @@ var organizationSchema = new Schema({
 			default: 'viewer'
 		}	
 	},
-	createdBy: {
-		type: String,
-		lowercase: true,
-		trim: true
+	_createdBy: {
+		type: ObjectId,
+		ref: 'User',
 	},
 	createdOn: {
 		type: Date, 

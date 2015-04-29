@@ -8,8 +8,8 @@ exports.findAll = function(next) {
 	Organization
 		.find()
 		.select('_id name')
-		.exec(function (error, results) {
-			next(error, results);
+		.exec(function (error, organizations) {
+			next(error, organizations);
 		});
 };
 
@@ -17,8 +17,8 @@ exports.findById = function(organizationId, next) {
 	// return error, null, or organization object
 	Organization
 		.findById(organizationId)
-		.exec(function(error, result) {
-			next(error, result);
+		.exec(function(error, organization) {
+			next(error, organization);
 	});	
 };
 

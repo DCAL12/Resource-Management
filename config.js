@@ -1,8 +1,8 @@
 var config = {};
 
 config.siteInfo = {
-	siteTitle: 'Resource Management',
-	siteDescription: 'A tool for managing organizational assets',
+	siteTitle: 'ARManA',
+	siteDescription: 'A Resource MANagement App',
 	cookieMaxAgeDays: 14
 };
 

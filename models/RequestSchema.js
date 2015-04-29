@@ -29,6 +29,10 @@ var requestSchema = new Schema({
 		type: String,
 		required: 'A location is required'
 	},
+	_createdBy: {
+		type: ObjectId,
+		ref: 'User',
+	},
 	createdOn: {
 		type: Date, 
 		default: Date.now
