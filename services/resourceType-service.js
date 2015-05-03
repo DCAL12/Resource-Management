@@ -17,11 +17,12 @@ exports.getAllByOrganizationId = function(organizationId, next) {
 
 exports.add = function(organizationId, data, next) {
 	data._organization = organizationId;
-	ResourceType.create(data, function (error) {
+	
+	ResourceType.createWithCollectionName(data, function (error, resourceTypeId) {
 		if (error) {
 			return next(parseError(error));
 		}
-		next();
+		next(null, resourceTypeId);
 	});
 };
 
@@ -30,25 +31,17 @@ exports.delete = function(resourceTypeId, next) {
 		.findByIdAndRemove(resourceTypeId)
 		.exec(function(error) {
 			if (error) {
+				console.log('DELETE ERROR');
+				console.log(error);
 				return next(parseError(error));
 			}
 			next();
 		});	
 };
 
-exports.getAttributeFields = function() {
-	return AttributeSchema;	
-};
-
-exports.generateCollectionName = function(resourceType, next) {
-	// return error, null or formatted collection name
-	resourceType.populate('_organization').exec(function(error, result) {
-		if (error) {
-			return next(error);
-		}
-		next(null, result + '-' + resourceType.name);
-	});	
-};
+// exports.getAttributeFields = function() {
+// 	return AttributeSchema;	
+// };
 
 // CONSIDER REMOVING
 // exports.getByOrganizationIdAndType = function(organizationId, resourceType, next) {

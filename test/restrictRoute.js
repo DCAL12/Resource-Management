@@ -40,4 +40,9 @@ describe('restrict route', function() {
 				done();
 			});
 	});
+	
+	after(function(done) {
+		agent.get('/users/logout');
+		done();
+	});
 });

@@ -33,8 +33,8 @@ exports.findById = function(organizationId, next) {
 // 		});
 // };
 
-exports.add = function(request, next) {
-	Organization.create(request, function(error, organization) {
+exports.add = function(data, next) {
+	Organization.create(data, function(error, organization) {
 		if (error) {
 			return next(parseError(error));
 		}

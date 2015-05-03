@@ -6,16 +6,16 @@ var parseError = mongooseUtil.parseError;
 exports.getAllByOrganizationId = function(organizationId, next) {
 	ResourceType
 		.find({ _organization: organizationId })
-		.select('model')
-		.exec(function(error, Models) {
+		.exec(function(error, resourceTypes) {
 			var collections = [];
 			
 			if (error) {
 				return next(parseError(error));
 			}
 			
-			Models.forEach(function(model) {
-				model.findAll(function(error, documents) {
+			resourceTypes.forEach(function(resourceType) {
+				var Resource = resourceType.model;
+				Resource.findAll(function(error, documents) {
 					if(error) {
 						return next(parseError(error));
 					}
@@ -29,29 +29,35 @@ exports.getAllByOrganizationId = function(organizationId, next) {
 exports.add = function(resourceTypeId, data, next) {
 	ResourceType
 		.findById(resourceTypeId)
-		.select('model')
-		.exec(function(error, Model) {
+		.exec(function(error, resourceType) {
+			var Resource = null;
+			
 			if (error) {
 				return next(parseError(error));
 			}
-			Model.create(data, function(error) {
-				if (error) {
+			
+			Resource = resourceType.model;
+			Resource.create(data, function(error, resource) {
+				if(error) {
 					return next(parseError(error));
 				}
-				next();	
-			});	
+				next(null, resource._id);
+			});
 		});
 };
 
 exports.update = function(resourceTypeId, resourceId, data, next) {
 	ResourceType
 		.findById(resourceTypeId)
-		.select('model')
-		.exec(function(error, Model) {
+		.exec(function(error, resourceType) {
+			var Resource = null;
+			
 			if (error) {
 				return next(parseError(error));
 			}
-			Model
+			
+			Resource = resourceType.model;
+			Resource
 				.findByIdAndUpdate(resourceId, data)
 				.exec(function(error) {
 					if (error) {
@@ -65,12 +71,15 @@ exports.update = function(resourceTypeId, resourceId, data, next) {
 exports.delete = function(resourceTypeId, resourceId, next) {
 	ResourceType
 		.findById(resourceTypeId)
-		.select('model')
-		.exec(function(error, Model) {
+		.exec(function(error, resourceType) {
+			var Resource = null;
+			
 			if (error) {
 				return next(parseError(error));
 			}
-			Model
+			
+			Resource = resourceType.model;
+			Resource
 				.findByIdAndRemove(resourceId)
 				.exec(function(error) {
 					if (error) {

@@ -1,5 +1,4 @@
-var mongoose = require('mongoose'),
-	uniqueValidator = require('mongoose-unique-validator');
+var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema,
 	schemaTypes = [ 
@@ -8,9 +7,9 @@ var Schema = mongoose.Schema,
 		'Date',
 		'Boolean',
 		'Array'
-	]
+	];
 
-var Attribute = new Schema({
+module.exports = new Schema({
 	name: {
 		type: String, 
 		required: 'An attribute name is required',
@@ -19,27 +18,18 @@ var Attribute = new Schema({
 	type: {
 		type: String,
 		enum: schemaTypes,
-		default: 'String',
 		required: 'A data type is required'
 	},
 	unique: {
-		type: Boolean,
-		default: false
+		type: Boolean
 	},
 	required: {
-		type: Boolean,
-		default: false
-	}
-	// min: {
-	// 	type: Number
-	// },
-	// max: {
-	// 	type: Number
-	// }	
-});
-
-Attribute.plugin(uniqueValidator, {
-	message: 'An attribute with that name already exists'
-});
-
-module.exports = Attribute;
+		type: Boolean
+	},
+	min: {
+		type: Number
+	},
+	max: {
+		type: Number
+	}	
+}, { _id: false });

@@ -26,7 +26,6 @@ describe('organizations', function() {
 					throw error;
 				}
 				response.status.should.equal(302);
-				console.log(response);
 				done();
 			});
 	});
@@ -63,5 +62,10 @@ describe('organizations', function() {
 				response.status.should.equal(500);
 				done();
 			});
+	});
+	
+	after(function(done) {
+		agent.get('/users/logout');
+		done();
 	});
 });

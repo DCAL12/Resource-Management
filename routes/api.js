@@ -96,11 +96,14 @@ router.route('/resources/:organizationId/:resourceTypeId?/:resourceId?')
     })
     
     .post(function(request, response, next) {
-        resourceService.add(request.params.resourceTypeId, request.body, function(error) {
+        resourceService.add(request.params.resourceTypeId, request.body, function(error, resourceId) {
             if (error) {
                 return response.status(500).json({ error: 'Failed to add the resource' });
             }
-            response.json({ success: true });    
+            response.json({ 
+                success: true,
+                resourceId: resourceId
+            });    
         });     
     })
     
@@ -116,6 +119,8 @@ router.route('/resources/:organizationId/:resourceTypeId?/:resourceId?')
     .delete(function(request, response, next) {
         resourceService.delete(request.params.resourceTypeId, request.params.resourceId, function(error) {
             if (error) {
+                console.log('ERROR');
+                console.log(error)
                 return response.status(500).json({ error: 'Failed to delete the resource' });
             }
             response.json({ success: true });    
@@ -133,11 +138,14 @@ router.route('/resourceTypes/:organizationId/:resourceTypeId?')
     })
     
     .post(function(request, response, next) {
-        resourceTypeService.add(request.params.organizationId, request.body, function(error) {
+        resourceTypeService.add(request.params.organizationId, request.body, function(error, resourceTypeId) {
             if (error) {
-                return response.status(500).json({ error: 'Failed to add the resource type' });
+                return response.status(500).json({ error: error });
             }
-            response.json({ success: true });    
+            response.json({ 
+                success: true,
+                resourceTypeId: resourceTypeId
+            });    
         });     
     })
     
