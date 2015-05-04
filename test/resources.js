@@ -29,44 +29,56 @@ describe('resources', function() {
 					throw error;
 				}
 				response.status.should.equal(200);
-				testResource._id = response.body.resourceId;
+				testResource._id = response.body;
 				done();
 			});
 	});
 	
-	// it('should get details for an organization', function(done) {
-	//     agent
-	// 		.get('/api/organizations/' + persistentData.organizations[0]._id)
-	// 		.expect(200)
-	// 		.expect('Content-Type', /json/)
-	// 		.end(function(error, response) {
-	// 			response.status.should.equal(200);
-	// 			response.body.should.have.property('name', persistentData.organizations[0].name);
-	// 			done();
-	// 		});
-	// });
+	it('should get details for a resource', function(done) {
+	    agent
+			.get('/api/resources/' 
+			+ persistentData.organizations[0]._id
+			+ '/' 
+			+ persistentData.resourceTypes[0]._id
+			+ '/'
+			+ testResource._id)
+			.expect(200)
+			.expect('Content-Type', /json/)
+			.end(function(error, response) {
+				response.status.should.equal(200);
+				response.body.should.have.property('tailNumber', testResource.tailNumber);
+				done();
+			});
+	});
 	
-	// it('should get a list of organizations', function(done) {
-	// 	agent
-	// 		.get('/api/organizations/')
-	// 		.expect(200)
-	// 		.expect('Content-Type', /json/)
-	// 		.end(function(error, response) {
-	// 			response.status.should.equal(200);
-	// 			response.body.should.not.equal(null);
-	// 			done();
-	// 		});
-	// });
+	it('should get all resources of a resourceType', function(done) {
+	    agent
+			.get('/api/resources/' 
+			+ persistentData.organizations[0]._id
+			+ '/' 
+			+ persistentData.resourceTypes[0]._id)
+			.expect(200)
+			.expect('Content-Type', /json/)
+			.end(function(error, response) {
+				response.status.should.equal(200);
+				done();
+			});
+	});
 	
-	// it('should return an error for an invalid organization', function(done) {
-	// 	agent
-	// 		.get('/api/organizations/nonexixtentOrg')
-	// 		.expect(500)
-	// 		.end(function(error, response) {
-	// 			response.status.should.equal(500);
-	// 			done();
-	// 		});
-	// });
+	it('should return an error for an invalid resource request', function(done) {
+		agent
+			.get('/api/resources/' 
+			+ persistentData.organizations[0]._id
+			+ '/' 
+			+ persistentData.resourceTypes[0]._id
+			+ '/nonexistentResource')
+			.expect(500)
+			.expect('Content-Type', /json/)
+			.end(function(error, response) {
+				response.status.should.equal(500);
+				done();
+			});
+	});
 	
 	after(function(done) {
 		agent

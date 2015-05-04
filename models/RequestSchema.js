@@ -13,6 +13,12 @@ var requestSchema = new Schema({
 		type: ObjectId,
 		ref: 'ResourceType' 
 	},
+	quantity: {
+		type: Number,
+		required: 'A quantity is required',
+		default: 1,
+		min: 1
+	},
 	description: {
 		type: String, 
 		required: 'A description is required'

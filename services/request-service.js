@@ -3,7 +3,18 @@ var Request = require('../models/RequestSchema').Request,
 	
 var parseError = mongooseUtil.parseError;
 
-exports.getAllByOrganizationId = function(organizationId, next) {
+exports.getByRequestId = function(requestId, next) {
+	Request
+		.findById(requestId)
+		.exec(function (error, request) {
+			if (error) {
+				return next(parseError(error));
+			}
+			next(null, request);
+	});
+};
+
+exports.getByOrganizationId = function(organizationId, next) {
 	Request
 		.find({ _organization: organizationId })
 		.exec(function (error, requests) {
@@ -14,12 +25,12 @@ exports.getAllByOrganizationId = function(organizationId, next) {
 	});
 };
 
-exports.add = function(organizationId, data, next) {
-	Request.create(data, function (error) {
+exports.add = function(data, next) {
+	Request.create(data, function (error, request) {
 		if (error) {
 			return next(parseError(error));
 		}
-		next(null);
+		next(null, request._id);
 	});
 };
 

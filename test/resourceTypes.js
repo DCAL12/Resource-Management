@@ -27,58 +27,22 @@ describe('resource types', function() {
 					throw error;
 				}
 				response.status.should.equal(200);
-				testResourceType._id = response.body.resourceTypeId;
+				testResourceType._id = response.body;
 				done();
 			});
 	});
 	
-	// it('should add a test resource', function(done) {
-	// 	agent
-	// 		.post('/api/resources/' + testOrg._id + '/' + testResourceType._id)
-	// 		.send(testResource)
-	// 		.expect(200)
-	// 		.end(function(error, response) {
-	// 			if (error) {
-	// 				throw error;
-	// 			}
-	// 			response.status.should.equal(200);
-	// 			done();
-	// 		});
-	// });
-	
-	// it('should get details for an organization', function(done) {
-	//     agent
-	// 		.get('/api/organizations/' + persistentData.organizations[0]._id)
-	// 		.expect(200)
-	// 		.expect('Content-Type', /json/)
-	// 		.end(function(error, response) {
-	// 			response.status.should.equal(200);
-	// 			response.body.should.have.property('name', persistentData.organizations[0].name);
-	// 			done();
-	// 		});
-	// });
-	
-	// it('should get a list of organizations', function(done) {
-	// 	agent
-	// 		.get('/api/organizations/')
-	// 		.expect(200)
-	// 		.expect('Content-Type', /json/)
-	// 		.end(function(error, response) {
-	// 			response.status.should.equal(200);
-	// 			response.body.should.not.equal(null);
-	// 			done();
-	// 		});
-	// });
-	
-	// it('should return an error for an invalid organization', function(done) {
-	// 	agent
-	// 		.get('/api/organizations/nonexixtentOrg')
-	// 		.expect(500)
-	// 		.end(function(error, response) {
-	// 			response.status.should.equal(500);
-	// 			done();
-	// 		});
-	// });
+	it('should get a list of resourceTypes for the test organization', function(done) {
+		agent
+			.get('/api/resourceTypes/' + testOrg._id)
+			.expect(200)
+			.expect('Content-Type', /json/)
+			.end(function(error, response) {
+				response.status.should.equal(200);
+				response.body.should.not.equal(null);
+				done();
+			});
+	});
 	
 	after(function(done) {
 		agent

@@ -1,13 +1,6 @@
 var mongoose = require('mongoose');
 
-var Schema = mongoose.Schema,
-	schemaTypes = [ 
-		'String', 
-		'Number',
-		'Date',
-		'Boolean',
-		'Array'
-	];
+var Schema = mongoose.Schema;
 
 module.exports = new Schema({
 	name: {
@@ -17,7 +10,13 @@ module.exports = new Schema({
 	},
 	type: {
 		type: String,
-		enum: schemaTypes,
+		enum: [
+			'String', 
+			'Number',
+			'Date',
+			'Boolean',
+			'Array'	
+		],
 		required: 'A data type is required'
 	},
 	unique: {

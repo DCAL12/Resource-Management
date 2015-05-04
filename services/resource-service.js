@@ -3,26 +3,47 @@ var ResourceType = require('../models/ResourceTypeSchema').ResourceType,
 	
 var parseError = mongooseUtil.parseError;
 
-exports.getAllByOrganizationId = function(organizationId, next) {
+exports.getByResourceTypeIdAndResourceId = function(resourceTypeId, resourceId, next) {
 	ResourceType
-		.find({ _organization: organizationId })
-		.exec(function(error, resourceTypes) {
-			var collections = [];
+		.findById(resourceTypeId)
+		.exec(function(error, resourceType) {
+			var Resource = null;
 			
 			if (error) {
 				return next(parseError(error));
 			}
 			
-			resourceTypes.forEach(function(resourceType) {
-				var Resource = resourceType.model;
-				Resource.findAll(function(error, documents) {
+			Resource = resourceType.model;
+			Resource
+				.findById(resourceId)
+				.exec(function(error, resource) {
 					if(error) {
 						return next(parseError(error));
 					}
-					collections.push(documents);
-				});	
+					next(null, resource);
 			});
-			next(null, collections);
+		});
+};
+
+exports.getByResourceTypeId = function(resourceTypeId, next) {
+	ResourceType
+		.findById(resourceTypeId)
+		.exec(function(error, resourceType) {
+			var Resource = null;
+			
+			if (error) {
+				return next(parseError(error));
+			}
+			
+			Resource = resourceType.model;
+			Resource
+				.find()
+				.exec(function(error, resources) {
+					if(error) {
+						return next(parseError(error));
+					}
+					next(null, resources);
+			});
 		});
 };
 

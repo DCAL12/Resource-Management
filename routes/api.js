@@ -49,7 +49,21 @@ router.route('/organizations/:organizationId')
     
 router.route('/requests/:organizationId/:requestId?')
     .get(function(request, response, next) {
-        requestService.getAllByOrganizationId(request.params.organizationId, function(error, requests) {
+        if (!request.params.requestId) return next();
+        
+        // Get details for a specific request
+        requestService.getByRequestId(request.params.requestId, function(error, request) {
+            if (error) {
+                return response.status(500).json({ error: 'Failed to retrieve requests' });
+            }
+            response.json(request);
+        });
+    })
+    
+    .get(function(request, response, next) {
+        
+        // Get a list of requests for the specified organization
+        requestService.getByOrganizationId(request.params.organizationId, function(error, requests) {
             if (error) {
                 return response.status(500).json({ error: 'Failed to retrieve requests' });
             }
@@ -58,11 +72,12 @@ router.route('/requests/:organizationId/:requestId?')
     })
     
     .post(function(request, response, next) {
-        requestService.add(request.params.organizationId, request.body, function(error) {
+        request.body._organization = request.params.organizationId;
+        requestService.add(request.body, function(error, requestId) {
             if (error) {
                 return response.status(500).json({ error: 'Failed to add the request' });
             }
-            response.json({ success: true });    
+            response.json(requestId);    
         });     
     })
     
@@ -86,13 +101,35 @@ router.route('/requests/:organizationId/:requestId?')
 
 router.route('/resources/:organizationId/:resourceTypeId?/:resourceId?')
     .get(function(request, response, next) {
-        resourceService.getAllByOrganizationId(request.params.organizationId, function(error, resources) {
+        if (!request.params.resourceId) return next();
+        
+        // Get details for a specific resource
+        resourceService.getByResourceTypeIdAndResourceId(
+        request.params.resourceTypeId, request.params.resourceId,
+        function(error, resource) {
+            
             if (error) {
                 return response.status(500).json({ error: 'Failed to retrieve resources' });
             }
-            // resources will be an array of collections, each containing an array of all resources of that resourceType
+            
+            // resource will be a single object
+            response.json(resource);
+        });    
+    })
+    
+    .get(function(request, response, next) {
+        
+        // Get a list of resources of the specified type
+        resourceService.getByResourceTypeId(
+        request.params.resourceTypeId,
+        function(error, resources) {
+            if (error) {
+                return response.status(500).json({ error: 'Failed to retrieve resources' });
+            }
+            
+            // resources will be an array of objects, each a resource of the resourceType
             response.json(resources);
-        });
+        });    
     })
     
     .post(function(request, response, next) {
@@ -100,10 +137,7 @@ router.route('/resources/:organizationId/:resourceTypeId?/:resourceId?')
             if (error) {
                 return response.status(500).json({ error: 'Failed to add the resource' });
             }
-            response.json({ 
-                success: true,
-                resourceId: resourceId
-            });    
+            response.json(resourceId);    
         });     
     })
     
@@ -119,8 +153,6 @@ router.route('/resources/:organizationId/:resourceTypeId?/:resourceId?')
     .delete(function(request, response, next) {
         resourceService.delete(request.params.resourceTypeId, request.params.resourceId, function(error) {
             if (error) {
-                console.log('ERROR');
-                console.log(error)
                 return response.status(500).json({ error: 'Failed to delete the resource' });
             }
             response.json({ success: true });    
@@ -142,10 +174,7 @@ router.route('/resourceTypes/:organizationId/:resourceTypeId?')
             if (error) {
                 return response.status(500).json({ error: error });
             }
-            response.json({ 
-                success: true,
-                resourceTypeId: resourceTypeId
-            });    
+            response.json(resourceTypeId);    
         });     
     })
     
