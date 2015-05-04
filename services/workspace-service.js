@@ -19,7 +19,7 @@ exports.getAllByUser = function (userId, next) {
 	Workspace
 		.find({_user: userId})
 		.select('_organization')
-		.populate('_organization')
+		.populate('_organization', '_id name')
 		.exec(function (error, results) {
 			if (error) {
 				next(error);

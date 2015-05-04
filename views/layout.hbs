@@ -34,9 +34,9 @@
                     <li><a href="/organizations" title="Organizations">Organizations</a></li>
                     <li><a href="/workspace" title="Workspace">Workspace</a></li>
                         <ul>
-                        {{#each workspaces}}
+                        {{#each user.workspaces}}
                             <li>
-                                <a href="/workspace/{{this._organization.name}}" 
+                                <a href="#/org/{{this._organization._id}}" 
                                     title="{{this._organization.name}}">
                                     {{this._organization.name}}
                                 </a>    

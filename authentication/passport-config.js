@@ -43,11 +43,11 @@ module.exports = function() {
 			}
 			// Join the user's available workspaces
 			workspaceService.getAllByUser(userId, 
-				function(error, organizationNames) {
-		    		if (error || !organizationNames.length > 0) {
+				function(error, workspaces) {
+		    		if (error || !workspaces.length > 0) {
 		        		return next(error, userInfo);
 		       		}
-		       		userInfo.workspaces = organizationNames;
+		       		userInfo.workspaces = workspaces;
       				return next(null, userInfo);
 			});
 		});
