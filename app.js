@@ -15,7 +15,6 @@ var index = require('./routes/index'),
     users = require('./routes/users'),
     organizations = require('./routes/organizations'),
     workspace = require('./routes/workspace'),
-    api_allocations = require('./routes/api/allocations'),
     api_organizations = require('./routes/api/organizations'),
     api_requests = require('./routes/api/requests'),
     api_resources = require('./routes/api/resources'),
@@ -57,7 +56,6 @@ app.use('/organizations', organizations);
 app.use('/workspace', workspace);
 
 // API Routes
-app.use('/api/allocations', api_allocations);
 app.use('/api/organizations', api_organizations);
 app.use('/api/requests', api_requests);
 app.use('/api/resources', api_resources);
