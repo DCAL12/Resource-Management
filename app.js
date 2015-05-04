@@ -15,7 +15,11 @@ var index = require('./routes/index'),
     users = require('./routes/users'),
     organizations = require('./routes/organizations'),
     workspace = require('./routes/workspace'),
-    api = require('./routes/api'),
+    api_allocations = require('./routes/api/allocations'),
+    api_organizations = require('./routes/api/organizations'),
+    api_requests = require('./routes/api/requests'),
+    api_resources = require('./routes/api/resources'),
+    api_resourceTypes = require('./routes/api/resourceTypes'),
     config = require('./config'),
     passportConfig = require('./authentication/passport-config');
     
@@ -46,12 +50,18 @@ app.use(connectFlash());
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Routes
+// Render Routes
 app.use('/', index);
 app.use('/users', users);
 app.use('/organizations', organizations);
 app.use('/workspace', workspace);
-app.use('/api', api);
+
+// API Routes
+app.use('/api/allocations', api_allocations);
+app.use('/api/organizations', api_organizations);
+app.use('/api/requests', api_requests);
+app.use('/api/resources', api_resources);
+app.use('/api/resourceTypes', api_resourceTypes);
 
 // Catch 404 and forward to error handler
 app.use(function (request, response, next) {

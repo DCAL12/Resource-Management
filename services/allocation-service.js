@@ -36,7 +36,12 @@ exports.add = function(data, next) {
 
 exports.update = function(requestId, data, next) {
 	Request
-		.findByIdAndUpdate(requestId, { $set: data})
+		.findByIdAndUpdate(requestId, { $set: {
+			description: data.description,
+			startTime: data.startTime,
+			endTime: data.endTime,
+			location: data.location
+		}})
 		.exec(function(error) {
 			if (error) {
 				return next(parseError(error));

@@ -39,7 +39,29 @@ var requestSchema = new Schema({
 		type: ObjectId,
 		ref: 'User',
 	},
-	createdOn: {
+	_createdTime: {
+		type: Date,
+		default: Date.now
+	},
+	status: {
+		type: String,
+		enum: [
+			'pending', 
+			'approved',
+			'approved with modification',
+			'denied',
+			'cancelled'
+		],
+		required: 'A current status is required',
+		default: 'pending'
+	},
+	allocatedResources: [ObjectId],
+	
+	_modifiedBy: {
+		type: ObjectId,
+		ref: 'User',
+	},
+	lastModified: {
 		type: Date, 
 		default: Date.now
 	}

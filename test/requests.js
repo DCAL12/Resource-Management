@@ -58,6 +58,23 @@ describe('requests', function() {
 			});
 	});
 	
+	it('should approve the test request', function(done) {
+	    testRequest.status = 'approved';
+	    testRequest.allocatedResources.push(persistentData.resources[0]._id);
+	    
+	    agent
+	    	.put('/api/requests/'
+	    	+ persistentData.organizations[0]._id
+			+ '/' 
+			+ testRequest._id)
+			.expect(200)
+			.send(testRequest)
+			.end(function(error, response) {
+				response.status.should.equal(200);
+				done();
+			});
+	});
+	
 	after(function(done) {
 		agent
 			.del('/api/requests/' 
