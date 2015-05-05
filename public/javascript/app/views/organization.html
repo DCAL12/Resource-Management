@@ -1,5 +1,5 @@
-<strong ng-show="!viewModel.organization">Loading...</strong>
-<header ng-show="viewModel.organization">
+<strong ng-show="!viewModel.organization.name">Loading...</strong>
+<header ng-show="viewModel.organization.name">
 <h3 ng-bind="viewModel.organization.name"></h3>
 <nav role="navigation" class="workspaceNavigation">
             <ul>
@@ -22,11 +22,11 @@
 
 <section>
 	<h4>Resources</h4>
-	<ul>
-		<li ng-repeat="resourceType in viewModel.resourceTypes | orderBy: 'type'" 
-			ng-bind="resourceType.type">
-		</li>
-	</ul>
+	<!--<ul>-->
+	<!--	<li ng-repeat="resourceType in viewModel.resourceTypes | orderBy: 'type'" -->
+	<!--		ng-bind="resourceType.type">-->
+	<!--	</li>-->
+	<!--</ul>-->
 	<!--<h5>Create Resource Type</h5>-->
 	<!--<form name="createResourceType" action="/api/resourceTypes/{{viewModel.organization._id}}" method="post">-->
 	<!--    <label for="type">Type Name</label>-->
@@ -35,9 +35,10 @@
 	<!--</form>-->
 </section>
 
-<!--<section>-->
-<!--	<h4>Organization Info</h4>-->
-<!--</section>-->
+<section>
+	<h4>Organization Info</h4>
+	<p ng-click="viewModel.deleteOrganization.dialog()">Delete Organization</p>
+</section>
 
 <!--<section>-->
 <!--	<h3>Timeline</h3>-->
