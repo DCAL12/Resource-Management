@@ -49,9 +49,9 @@ exports.add = function(user, next) {
 	});
 };
 
-exports.update = function(user, update, next) {
+exports.update = function(userId, update, next) {
 	User
-		.findByIdAndUpdate(user._id, update)
+		.findByIdAndUpdate(userId, update)
 		.exec(function(error, userDocument) {
 			if (error) {
 				return next(parseError(error));

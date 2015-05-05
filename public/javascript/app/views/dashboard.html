@@ -1,7 +1,6 @@
-
-
 <section>
 	<h3>Available Organizations</h3>
+	<p ng-click="viewModel.createOrganization.dialog()">Create One</p>
 	<strong ng-show="!viewModel.organizations">Loading...</strong>
 	<ul>
 		<li ng-repeat="organization in viewModel.organizations | orderBy: 'name'">

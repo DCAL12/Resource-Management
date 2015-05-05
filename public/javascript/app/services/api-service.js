@@ -28,6 +28,11 @@
 					.then(respond, giveReason)
 					.catch(error);
 			},
+			addOrganization: function(data) {
+				return $http.post(apiPaths.organizations, data)
+					.then(respond, giveReason)
+					.catch(error);
+			},
 			updateOrganization: function(organizationId, data) {
 				return $http.put(apiPaths.organizations + organizationId, data)
 					.then(respond, giveReason)

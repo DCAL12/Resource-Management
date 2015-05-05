@@ -13,7 +13,6 @@ var express = require('express'),
 // Application modules
 var index = require('./routes/index'),
     users = require('./routes/users'),
-    organizations = require('./routes/organizations'),
     workspace = require('./routes/workspace'),
     api_organizations = require('./routes/api/organizations'),
     api_requests = require('./routes/api/requests'),
@@ -49,13 +48,12 @@ app.use(connectFlash());
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Render Routes
+// Server Rendered Routes
 app.use('/', index);
 app.use('/users', users);
-app.use('/organizations', organizations);
 app.use('/workspace', workspace);
 
-// API Routes
+// API Routes (CRUD)
 app.use('/api/organizations', api_organizations);
 app.use('/api/requests', api_requests);
 app.use('/api/resources', api_resources);

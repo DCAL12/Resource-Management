@@ -15,9 +15,7 @@ exports.getAllByOrganizationId = function(organizationId, next) {
 		});
 };
 
-exports.add = function(organizationId, data, next) {
-	data._organization = organizationId;
-	
+exports.add = function(data, next) {
 	ResourceType.createWithCollectionName(data, function (error, resourceTypeId) {
 		if (error) {
 			return next(parseError(error));
@@ -41,15 +39,5 @@ exports.delete = function(resourceTypeId, next) {
 
 // exports.getAttributeFields = function() {
 // 	return AttributeSchema;	
-// };
-
-// CONSIDER REMOVING
-// exports.getByOrganizationIdAndType = function(organizationId, resourceType, next) {
-// 	ResourceType.findOne({
-// 		_organization: organizationId,
-// 		type: resourceType
-// 	}, function (error, resourceType) {
-// 		next(error, resourceType);
-// 	});
 // };
 

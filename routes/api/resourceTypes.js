@@ -18,7 +18,8 @@ router.route('/:organizationId/:resourceTypeId?')
     })
     
     .post(function(request, response, next) {
-        resourceTypeService.add(request.params.organizationId, request.body, function(error, resourceTypeId) {
+        request.body._organization = request.params.organizationId;
+        resourceTypeService.add(request.body, function(error, resourceTypeId) {
             if (error) {
                 return response.status(500).json({ error: error });
             }

@@ -1,0 +1,58 @@
+<div class="dialog">
+	<header>
+		<h1>Create a New Organization</h1>
+	</header>
+	
+	<form 
+		name="createOrganization" 
+		method="post" 
+		novalidate
+		ng-submit="createOrganization.$valid && 
+			viewModel.createOrganization.submit()">
+	    
+	    <label for="organizationName">Organization Name</label>
+	    <input 
+	    	type="text" 
+			id="organizationName" 
+			name="name" 
+			ng-model="viewModel.createOrganization.data.name" 
+			required>
+	    
+	    <label for="description">Description</label>
+	    <input 
+	    	type="text" 
+			id="description" 
+			name="description" 
+			ng-model="viewModel.createOrganization.data.description" 
+			required>
+	    
+	    <label for="defaultOrganization">Make this my default workspace</label>
+	    <input 
+	    	type="checkbox" 
+			id="defaultOrganization" 
+			name="defaultOrganization" 
+			value="true" 
+			checked>
+	    
+	    <input type="submit" value="Create">
+	    <span ng-show="viewModel.createOrganization.processing">
+	    	Processing...
+	    </span>
+	    
+	    <div class="status" ng-show="createOrganization.$submitted">
+	    	<ul>
+	    		<li 
+	    			class="error" 
+	    			ng-show="createOrganization.name.$error.required">
+	    			A unique organization name is required
+	    		</li>
+	    		<li 
+	    			class="error" 
+	    			ng-show="createOrganization.description.$error.required">
+	    			A brief description is required
+	    		</li>
+	    	</ul>
+	    </div>
+	   
+	</form>	
+</div>

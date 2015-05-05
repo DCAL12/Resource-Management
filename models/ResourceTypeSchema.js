@@ -1,8 +1,7 @@
 var mongoose = require('mongoose'),
 	schemaGenerator = require('mongoose-gen'),
 	AttributeSchema = require('./AttributeSchema'),
-	Organization = require('./OrganizationSchema').Organization,
-	resourceTypeService = require('../services/resourceType-service');
+	Organization = require('./OrganizationSchema').Organization;
 
 var Schema = mongoose.Schema,
 	ObjectId = Schema.Types.ObjectId;
