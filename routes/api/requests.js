@@ -36,6 +36,8 @@ router.route('/:organizationId/:requestId?')
         request.body._createdBy = request.user._id;
         requestService.add(request.body, function(error, requestId) {
             if (error) {
+                console.log('ERROR');
+                console.log(error);
                 return response.status(500).json({ error: 'Failed to add the request' });
             }
             response.json(requestId);    

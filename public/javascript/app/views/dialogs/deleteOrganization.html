@@ -1,6 +1,11 @@
 <div class="dialog">
 
 	<h1 ng-bind="'Are you sure you want to delete ' + viewModel.organization.name + '?'"></h1>
-	<button ng-click="viewModel.deleteOrganization.confirm()">Delete</button>
+	<button ng-click="viewModel
+			.organizationWidget
+			.deleteOrganization
+			.confirm()">
+		Delete
+	</button>
 	
 </div>

@@ -1,0 +1,81 @@
+<div class="dialog">
+	
+	<h1>Request a Resource</h1>
+	
+	<form 
+		name="createRequest" 
+		method="post" 
+		novalidate
+		ng-submit="createRequest.$valid && 
+			viewModel.requestWidget.createRequest.submit()">
+	    
+	    <label for="resourceType">Resource Type</label>
+	    <input 
+	    	type="text" 
+			id="resourceType" 
+			name="resourceType" 
+			ng-model="viewModel.requestWidget.createRequest.data._resourceType" 
+			required>
+			
+		<label for="quantity">Quantity</label>
+	    <input 
+	    	type="number" 
+			id="quantity" 
+			name="quantity" 
+			ng-model="viewModel.requestWidget.createRequest.data.quantity" 
+			required>
+	    
+	    <label for="description">Description</label>
+	    <input 
+	    	type="text" 
+			id="description" 
+			name="description" 
+			ng-model="viewModel.requestWidget.createRequest.data.description" 
+			required>
+			
+		<label for="startTime">Start Time</label>
+	    <input 
+	    	type="datetime" 
+			id="startTime" 
+			name="startTime" 
+			ng-model="viewModel.requestWidget.createRequest.data.startTime" 
+			required>
+			
+		<label for="endTime">End Time</label>
+	    <input 
+	    	type="datetime" 
+			id="endTime" 
+			name="endTime" 
+			ng-model="viewModel.requestWidget.createRequest.data.endTime" 
+			required>
+			
+		<label for="location">Location</label>
+	    <input 
+	    	type="text" 
+			id="location" 
+			name="location" 
+			ng-model="viewModel.requestWidget.createRequest.data.location" 
+			required>
+	    
+	    <input type="submit" value="Submit">
+	    <span ng-show="viewModel.requestWidget.createRequest.processing">
+	    	Processing...
+	    </span>
+	    
+	    <div class="status" ng-show="createRequest.$submitted">
+	    	<ul>
+	    		<li 
+	    			class="error" 
+	    			ng-show="createRequest.name.$error.required">
+	    			A unique organization name is required
+	    		</li>
+	    		<li 
+	    			class="error" 
+	    			ng-show="createRequest.description.$error.required">
+	    			A brief description is required
+	    		</li>
+	    	</ul>
+	    </div>
+	   
+	</form>	
+</div>

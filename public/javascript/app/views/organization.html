@@ -18,26 +18,79 @@
 
 <section>
 	<h4>Requests</h4>
+	<table>
+		<tr>
+			<th>Resource Type</th>
+			<th>QTY</th>
+			<th>Description</th>
+			<th>Start</th>
+			<th>End</th>
+			<th>Location</th>
+			<th>Requestor</th>
+			<th>Submitted</th>
+			<th>Status</th>
+		</tr>
+		<tr ng-repeat="request in viewModel.requests">
+			<td ng-bind="request._resourceType.type"></td>
+			<td ng-bind="request.quantity"></td>
+			<td ng-bind="request.description"></td>
+			<td ng-bind="request.startTime"></td>
+			<td ng-bind="request.endTime"></td>
+			<td ng-bind="request.location"></td>
+			<td ng-bind="request._createdBy.email"></td>
+			<td ng-bind="request.createdTime"></td>
+			<td ng-bind="request.status"></td>
+		</tr>
+	</table>
+	
+	<p class="action"
+		ng-click="viewModel
+			.requestWidget
+			.createRequest
+			.dialog()">
+		Add Request
+	</p>
+	
 </section>
 
 <section>
+	
 	<h4>Resources</h4>
-	<!--<ul>-->
-	<!--	<li ng-repeat="resourceType in viewModel.resourceTypes | orderBy: 'type'" -->
-	<!--		ng-bind="resourceType.type">-->
-	<!--	</li>-->
-	<!--</ul>-->
-	<!--<h5>Create Resource Type</h5>-->
-	<!--<form name="createResourceType" action="/api/resourceTypes/{{viewModel.organization._id}}" method="post">-->
-	<!--    <label for="type">Type Name</label>-->
-	<!--    <input type="text" id="type" name="type" value="{{content.type}}" required>-->
-	<!--    <input type="submit" value="Create">-->
-	<!--</form>-->
+	<p>Select a Resource Type:</p>
+	<ul>
+		<li ng-repeat="resourceType in viewModel.resourceTypes" 
+			ng-bind="resourceType.type">
+		</li>
+	</ul>
+	<p class="action"
+		ng-click="viewModel
+			.resourceWidget
+			.createResourceType
+			.dialog()">
+		Add Resource Type
+	</p>
+	
 </section>
 
 <section>
 	<h4>Organization Info</h4>
-	<p ng-click="viewModel.deleteOrganization.dialog()">Delete Organization</p>
+	<table>
+		<tr>
+			<td>Name</td>
+			<td ng-bind="viewModel.organization.name"></td>
+		</tr>
+		<tr>
+			<td>Description</td>
+			<td ng-bind="viewModel.organization.description"></td>
+		</tr>
+	</table>
+	<p class="action"
+		ng-click="viewModel
+			.organizationWidget
+			.deleteOrganization
+				.dialog()">
+		Delete Organization
+	</p>
 </section>
 
 <!--<section>-->

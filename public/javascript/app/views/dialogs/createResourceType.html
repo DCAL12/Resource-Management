@@ -1,0 +1,35 @@
+<div class="dialog">
+	<h1>Add a Resource Type</h1>
+
+	<form 
+		name="createResourceType" 
+		method="post" 
+		novalidate
+		ng-submit="createResourceType.$valid && 
+			viewModel.resourceWidget.createResourceType.submit()">
+	    
+	    <label for="type">Type Name</label>
+	    <input 
+	    	type="text" 
+			id="type" 
+			name="type" 
+			ng-model="viewModel.resourceWidget.createResourceType.data.type" 
+			required>
+	    
+	    <input type="submit" value="Create">
+	    <span ng-show="viewModel.createOrganization.processing">
+	    	Processing...
+	    </span>
+	    
+	    <div class="status" ng-show="createOrganization.$submitted">
+	    	<ul>
+	    		<li 
+	    			class="error" 
+	    			ng-show="createResourceType.type.$error.required">
+	    			A unique resource type name is required
+	    		</li>
+	    	</ul>
+	    </div>
+	   
+	</form>	
+</div>

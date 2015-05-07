@@ -39,7 +39,7 @@ var requestSchema = new Schema({
 		type: ObjectId,
 		ref: 'User',
 	},
-	_createdTime: {
+	createdTime: {
 		type: Date,
 		default: Date.now
 	},

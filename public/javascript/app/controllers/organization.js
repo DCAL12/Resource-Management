@@ -15,30 +15,81 @@
 			.then(function(data) {
 				viewModel.organization = data;
 			});
-		
-		viewModel.deleteOrganization = {
-			dialog: function() {
-				ngDialog.open({
-					template: 'javascript/app/views/dialogs/deleteOrganization.html',
-					className: 'ngdialog-theme-default',
-					scope: $scope
-				});
-			},
-			confirm: function() {
-				api.deleteOrganization($routeParams.organizationId)
-					.then(function(response) {
-						if (response && !response.error) {
-							return $location.url('/');
-						}
-						alert('Something went wrong...');
+			
+		api.getResourceTypes($routeParams.organizationId)
+			.then(function(data) {
+				viewModel.resourceTypes = data;
+			});
+			
+		api.getRequests($routeParams.organizationId)
+			.then(function(data) {
+				viewModel.requests = data;
+			});
+			
+		viewModel.requestWidget = {
+			createRequest: {
+				dialog: function() {
+					ngDialog.open({
+						template: 'javascript/app/views/dialogs/createRequest.html',
+						className: 'ngdialog-theme-default',
+						scope: $scope
 					});
-				ngDialog.close();
-			}
+				},
+				submit: function() {
+					api.addRequest($routeParams.organizationId,
+						viewModel.requestWidget.createRequest.data)
+							.then(function(response) {
+								if (response && response.error) {
+									alert('Something went wrong...');
+								}
+							});
+					ngDialog.close();
+				}
+			}	
 		};
 			
-		// api.getResourceTypes($routeParams.organizationId)
-		// 	.then(function(data) {
-		// 		viewModel.resourceTypes = data;
-		// 	});
+		viewModel.resourceWidget = {
+			createResourceType: {
+				dialog: function() {
+					ngDialog.open({
+						template: 'javascript/app/views/dialogs/createResourceType.html',
+						className: 'ngdialog-theme-default',
+						scope: $scope
+					});
+				},
+				submit: function() {
+					api.addResourceType($routeParams.organizationId, 
+						viewModel.resourceWidget.createResourceType.data)
+							.then(function(response) {
+								if (response && response.error) {
+									alert('Something went wrong...');
+								}
+							});
+					ngDialog.close();
+				}
+			}	
+		};
+		
+		viewModel.organizationWidget = {
+			deleteOrganization: {
+				dialog: function() {
+					ngDialog.open({
+						template: 'javascript/app/views/dialogs/deleteOrganization.html',
+						className: 'ngdialog-theme-default',
+						scope: $scope
+					});
+				},
+				confirm: function() {
+					api.deleteOrganization($routeParams.organizationId)
+						.then(function(response) {
+							if (response && !response.error) {
+								return $location.url('/');
+							}
+							alert('Something went wrong...');
+						});
+					ngDialog.close();
+				}
+			}	
+		};
 	}
 }());

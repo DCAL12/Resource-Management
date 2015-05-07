@@ -6,7 +6,7 @@ var parseError = mongooseUtil.parseError;
 
 exports.getAllByOrganizationId = function(organizationId, next) {
 	ResourceType
-		.find({ _id: organizationId })
+		.find({ _organization: organizationId })
 		.exec(function (error, resourceTypes) {
 			if (error) {
 				return next(parseError(error));
