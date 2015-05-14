@@ -67,25 +67,43 @@
 			},
 			
 			// Resource API
-			getResources: function(organizationId) {
-				return $http.get(apiPaths.resources + organizationId)
-					.then(respond, giveReason)
-					.catch(error);
+			getResources: function(organizationId, resourceTypeId) {
+				return $http.get(apiPaths.resources 
+					+ organizationId 
+					+ '/' 
+					+ resourceTypeId)
+						.then(respond, giveReason)
+						.catch(error);
 			},
-			addResource: function(organizationId, data) {
-				return $http.post(apiPaths.resources + organizationId, data)
-					.then(respond, giveReason)
-					.catch(error);	
+			addResource: function(organizationId, resourceTypeId, data) {
+				return $http.post(apiPaths.resources 
+					+ organizationId 
+					+ '/' 
+					+ resourceTypeId, 
+					data)
+						.then(respond, giveReason)
+						.catch(error);	
 			},
-			updateResource: function(organizationId, resourceId, data) {
-				return $http.put(apiPaths.resources + organizationId + '/' + resourceId, data)
-					.then(respond, giveReason)
-					.catch(error);	
+			updateResource: function(organizationId, resourceTypeId, resourceId, data) {
+				return $http.put(apiPaths.resources 
+					+ organizationId 
+					+ '/' 
+					+ resourceTypeId
+					+'/'
+					+ resourceId, 
+					data)
+						.then(respond, giveReason)
+						.catch(error);	
 			},
-			deleteResource: function(organizationId) {
-				return $http.delete(apiPaths.resources + organizationId)
-					.then(respond, giveReason)
-					.catch(error);	
+			deleteResource: function(organizationId, resourceTypeId, resourceId) {
+				return $http.delete(apiPaths.resources
+					+ organizationId 
+					+ '/' 
+					+ resourceTypeId
+					+'/'
+					+ resourceId)
+						.then(respond, giveReason)
+						.catch(error);	
 			},
 			
 			// Resource Type API

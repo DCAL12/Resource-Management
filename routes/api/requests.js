@@ -49,6 +49,7 @@ router.route('/:organizationId/:requestId?')
         request.body.lastModified = Date.now();
         requestService.update(request.params.requestId, request.body, function(error) {
             if (error) {
+                console.log(error);
                 return response.status(500).json({ error: 'Failed to update the request' });
             }
             response.json({ success: true });    

@@ -18,7 +18,7 @@ exports.getByOrganizationId = function(organizationId, next) {
 	Request
 		.find({ _organization: organizationId })
 		.populate('_resourceType', '_id type')
-		.populate('_createdBy', 'email')
+		.populate('_createdBy', '_id email')
 		.exec(function (error, requests) {
 			if (error) {
 				return next(parseError(error));

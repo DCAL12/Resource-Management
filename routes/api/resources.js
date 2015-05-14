@@ -9,6 +9,7 @@ router.use(restrictRoute);
 
 router.route('/:organizationId/:resourceTypeId?/:resourceId?')
     .get(function(request, response, next) {
+        
         if (!request.params.resourceId) return next();
         
         // Get details for a specific resource
@@ -26,6 +27,8 @@ router.route('/:organizationId/:resourceTypeId?/:resourceId?')
     })
     
     .get(function(request, response, next) {
+        
+        if (!request.params.resourceTypeId) return next(new Error('A resource type must be specified'));
         
         // Get a list of resources of the specified type
         resourceService.getByResourceTypeId(

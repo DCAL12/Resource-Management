@@ -1,14 +1,16 @@
 <strong ng-show="!viewModel.organization.name">Loading...</strong>
 <header ng-show="viewModel.organization.name">
-<h3 ng-bind="viewModel.organization.name"></h3>
-<nav role="navigation" class="workspaceNavigation">
-            <ul>
-                <li><a href="timeline" title="Timeline">Timeline</a></li>
-                <li><a href="requests" title="Requests">Requests</a></li>
-                <li><a href="resources" title="Resources">Resources</a></li>
-                <li><a href="organization" title="Organization Info">Organization Info</a></li>
-            </ul>
-        </nav>	
+	
+	<h3 ng-bind="viewModel.organization.name"></h3>
+	
+	<!--<nav role="navigation" class="workspaceNavigation">-->
+	<!--    <ul>-->
+	<!--        <li><a href="timeline" title="Timeline">Timeline</a></li>-->
+	<!--        <li><a href="requests" title="Requests">Requests</a></li>-->
+	<!--        <li><a href="resources" title="Resources">Resources</a></li>-->
+	<!--        <li><a href="organization" title="Organization Info">Organization Info</a></li>-->
+	<!--    </ul>-->
+	<!--</nav>	-->
 </header>
 
 <section>
@@ -18,7 +20,11 @@
 
 <section>
 	<h4>Requests</h4>
-	<table>
+	
+	<strong ng-show="!viewModel.requests">Loading...</strong>
+	<strong ng-show="viewModel.requests.length === 0">There are no requests</strong>
+	
+	<table ng-show="viewModel.requests && viewModel.requests.length > 0">
 		<tr>
 			<th>Resource Type</th>
 			<th>QTY</th>
@@ -30,7 +36,8 @@
 			<th>Submitted</th>
 			<th>Status</th>
 		</tr>
-		<tr ng-repeat="request in viewModel.requests">
+		<tr ng-repeat="request in viewModel.requests"
+			ng-class="{even: $even, odd: $odd}">
 			<td ng-bind="request._resourceType.type"></td>
 			<td ng-bind="request.quantity"></td>
 			<td ng-bind="request.description"></td>
@@ -39,7 +46,16 @@
 			<td ng-bind="request.location"></td>
 			<td ng-bind="request._createdBy.email"></td>
 			<td ng-bind="request.createdTime"></td>
-			<td ng-bind="request.status"></td>
+			<td>
+				<select
+					ng-model="request.status"
+					ng-change="viewModel.requestWidget.updateRequest(request)">
+					<option>pending</option> 
+					<option>approved</option>
+					<option>denied</option>
+					<option>cancelled</option>
+				</select>
+			</td>
 		</tr>
 	</table>
 	
@@ -56,19 +72,98 @@
 <section>
 	
 	<h4>Resources</h4>
-	<p>Select a Resource Type:</p>
-	<ul>
-		<li ng-repeat="resourceType in viewModel.resourceTypes" 
-			ng-bind="resourceType.type">
+	
+	<ul class="action">
+		<li>
+			<select
+			 	ng-options="resourceType as resourceType.type for resourceType in viewModel.resourceTypes"
+				ng-model="viewModel.resourceTypes.selected"
+				ng-change="viewModel.resourceWidget.selectType(viewModel.resourceTypes.selected)">
+			 	<option value="">--Select a Resource Type--</option>
+			</select> 	
 		</li>
+		
+	
+		<li
+			ng-click="viewModel
+				.resourceWidget
+				.createResourceType
+				.dialog()">
+			Add Resource Type
+		</li>
+	
+		<li class="action"
+			ng-click="viewModel
+				.resourceWidget
+				.addAttribute
+				.dialog()">
+			Add an attribute
+		</li>	
 	</ul>
-	<p class="action"
-		ng-click="viewModel
-			.resourceWidget
-			.createResourceType
-			.dialog()">
-		Add Resource Type
-	</p>
+	
+	<div ng-show= "viewModel.resourceTypes.selected">
+		
+		<h5 ng-bind="'Available ' + viewModel.resourceTypes.selected.type + 's'"></h5>
+	
+		<strong ng-show="!viewModel.resources">Loading...</strong>
+		<strong ng-show="viewModel.resources.length === 0"
+				ng-bind="'There are no ' +  viewModel.resourceTypes.selected.type + 's defined'">
+		</strong>
+		
+		<form 
+			name="addResource" 
+			method="post" 
+			novalidate
+			ng-submit="addResource.$valid && 
+				viewModel.resourceWidget.addResource.submit()">
+		
+		<table class="data" ng-show="viewModel.resources && viewModel.resources.length > 0">
+			<tr>
+				<th ng-repeat="attribute in viewModel.resources.attributes" 
+					ng-bind="attribute.name"></th>
+			</tr>
+			
+			<tr ng-repeat="resource in viewModel.resources"
+				ng-class="{even: $even, odd: $odd}">
+				
+				<td ng-repeat="attribute in viewModel.resources.attributes"
+					ng-bind="resource[attribute.name]"></td>	
+			</tr>
+			
+			<tr>
+				<td ng-repeat="attribute in viewModel.resources.attributes">
+						<input type="{{ attribute.type }}"
+								name="{{ attribute.name }}"
+								placeholder="{{ attribute.name }}"
+								ng-model="viewModel.resourceWidget.addResource.data[attribute.name]"
+								ng-if="attribute.required"
+								required>
+						<input type="{{ attribute.type }}"
+								name="{{ attribute.name }}"
+								placeholder="{{ attribute.name }}"
+								ng-model="viewModel.resourceWidget.addResource.data[attribute.name]"
+								ng-if="!attribute.required">
+				</td>
+				
+				<td><input type="submit" value="Add"></td>
+				<span ng-show="viewModel.addResource.processing">
+			    	Processing...
+			    </span>
+			    
+			    <div class="status" ng-show="addResource.$submitted">
+			    	<ul>
+			    		<li ng-repeat="attribute in viewModel.resources.attributes | filter:attribute.required"
+			    			class="error" 
+			    			ng-show="addResource[attribute.name].$error.required"
+			    			ng-bind="attribute.name + ' is required'">
+			    		</li>
+			    	</ul>
+			    </div>
+			    
+			</tr>
+		</table>
+		</form>
+	</div>
 	
 </section>
 
@@ -92,178 +187,3 @@
 		Delete Organization
 	</p>
 </section>
-
-<!--<section>-->
-<!--	<h3>Timeline</h3>-->
-<!--<pre>-->
-<!--GUI for visually representing resources and requests on a timeline. -->
-<!--INPUT/OUTPUT: -->
-<!--	Variable 	Data Type 		Example 	-->
-	
-<!--	requests 	JSON Array 		{[-->
-<!--							{ -->
-<!--							"_id" : ObjectId("55236a2aa5719f79158e5a89"), -->
-<!--							"resourceType" : ObjectId("55236a2aa5719f79158e5a89"), -->
-<!--							"description" : "meeting", -->
-<!--							"startTime" : ISODate("1970-01-01T00:00:00Z"), -->
-<!--							"endTime" : ISODate("1970-01-01T00:00:00Z"), -->
-<!--							"location" : "Bldg. 100", -->
-<!--							"createdOn" : ISODate("2015-04-07T05:24:58.026Z"),-->
-<!--							"status" : "pending"-->
-<!--							},-->
-<!--							{-->
-<!--							"_id" : ObjectId("55236ac8a5719f79158e5a8a"),-->
-<!--							"resourceType" : ObjectId("55236a2aa5719f79158e5a89"), -->
-<!--							"description" : "road trip!", -->
-<!--							"startTime" : ISODate("1970-01-01T00:00:00Z"), -->
-<!--							"endTime" : ISODate("1970-01-01T00:00:00Z"), -->
-<!--							"location" : "Cairns to Sydney", -->
-<!--							"createdOn" : ISODate("2015-04-07T05:27:36.961Z"),-->
-<!--							"status" : "approved"-->
-<!--							}-->
-<!--						]}-->
-	
-<!--	resources 	JSON Array 		{[-->
-<!--							{-->
-<!--							"_id" : ObjectId("55277496ecd510591e197670"), -->
-<!--							"resourceType" : ObjectId("55236a2aa5719f79158e5a89"),-->
-<!--							"name" : "101"-->
-<!--							}-->
-<!--							{-->
-<!--							"_id" : ObjectId("55277496ecd510591e197670"), -->
-<!--							"resourceType" : ObjectId("55236a2aa5719f79158e5a89"),-->
-<!--							"name" : "102"-->
-<!--							}-->
-<!--						]}-->
-											
-<!--</pre>-->
-<!--</section>-->
-
-<!--<section>-->
-<!--	<h3>Requests</h3>-->
-<!--<pre>-->
-<!--Dynamic table listing all pending, approved, and denied requests.-->
-<!--INPUT/OUTPUT: -->
-<!--	Variable 	Data Type 		Example 	-->
-	
-<!--	requests 	JSON Array 		{[-->
-<!--							{ -->
-<!--							"_id" : ObjectId("55236a2aa5719f79158e5a89"), -->
-<!--							"resourceType" : ObjectId("55236a2aa5719f79158e5a89"), -->
-<!--							"description" : "meeting", -->
-<!--							"startTime" : ISODate("1970-01-01T00:00:00Z"), -->
-<!--							"endTime" : ISODate("1970-01-01T00:00:00Z"), -->
-<!--							"location" : "Bldg. 100", -->
-<!--							"createdOn" : ISODate("2015-04-07T05:24:58.026Z"),-->
-<!--							"status" : "pending"-->
-<!--							},-->
-<!--							{-->
-<!--							"_id" : ObjectId("55236ac8a5719f79158e5a8a"),-->
-<!--							"resourceType" : ObjectId("55236a2aa5719f79158e5a89"), -->
-<!--							"description" : "road trip!", -->
-<!--							"startTime" : ISODate("1970-01-01T00:00:00Z"), -->
-<!--							"endTime" : ISODate("1970-01-01T00:00:00Z"), -->
-<!--							"location" : "Cairns to Sydney", -->
-<!--							"createdOn" : ISODate("2015-04-07T05:27:36.961Z"),-->
-<!--							"status" : "approved"-->
-<!--							}-->
-<!--						]}-->
-											
-<!--</pre>-->
-<!--	<h4>Add Request</h4>-->
-<!--	<form name="addRequest" method="post" action="addRequest">-->
-	    <!--<label for="resourceType">Resource Type</label>-->
-	    <!--<input type="text" id="resourceType" name="resourceType" value="{{content.resourceType}}">-->
-	    
-	    <!--<label for="description">Description</label>-->
-	    <!--<input type="text" id="description" name="description" value="{{content.description}}" required>-->
-	    
-	    <!--<label for="startTime">Start Time</label>-->
-	    <!--<input type="date" id="startTime" name="startTime" value="{{content.startTime}}" required>-->
-	    
-	    <!--<label for="endTime">End Time</label>-->
-	    <!--<input type="date" id="endTime" name="endTime" value="{{content.endTime}}" required>-->
-	    
-	    <!--<label for="location">Location</label>-->
-	    <!--<input type="text" id="location" name="location" value="{{content.location}}" required>-->
-	    
-	    <!--<input type="submit" value="Submit">-->
-<!--	    {{!-- Additional Values to be submitted in request body: --}}-->
-<!--			{{resourceTypes._id}}-->
-<!--	</form>-->
-<!--</section>-->
-
-<!--<section>-->
-<!--	<h3>Resources</h3>-->
-<!--		<h4>Resource Types</h4>-->
-<!--<pre>-->
-<!--List of defined resource types. Most likely implemented as a selector to filter resources table. -->
-<!--INPUT/OUTPUT: -->
-<!--	Variable 		Data Type 		Example 	-->
-	
-<!--	resourceTypes 		JSON Array 		{[-->
-<!--								{ -->
-<!--								"_id" : ObjectId("55236a2aa5719f79158e5a89"), -->
-<!--								"type" : "Conference Room" -->
-<!--								},-->
-<!--								{-->
-<!--								"_id" : ObjectId("55236ac8a5719f79158e5a8a"),-->
-<!--								"type" : "Car")-->
-<!--								}-->
-<!--							]}-->
-<!--</pre>-->
-<!--			<h5>Add Resource Type</h5>-->
-<!--				<form name="addResourceType" method="post" action="addResourceType">-->
-<!--				    <label for="resourceTypeName">Resource Type Name</label>-->
-<!--				    <input type="text" id="resourceTypeName" name="type" value="{{content.type}}" required>-->
-<!--				    <input type="submit" value="Submit">-->
-<!--				    {{!-- -->
-<!--				    The 'type' field is the only required element. The rest of the form will allow-->
-<!--				    the user to add as many rows as necessary to define the attributes for their new-->
-<!--				    resource type. Each user-specified attribute has the following fields:-->
-<!--				    	fieldName (required) 	-->
-<!--				    	dataType (String, Number, Date, Boolean, Array)-->
-<!--				    	required (true/false)-->
-<!--				    --}}-->
-<!--				    {{!-- Additional Values to be submitted in request body: --}}-->
-<!--				    	{{organization._id}}-->
-<!--				</form>-->
-		
-<!--		<h4>Resources</h4>-->
-<!--<pre>-->
-<!--Dynamic table listing all resources by type (specified in another control on page). -->
-<!--INPUT/OUTPUT: -->
-<!--	Variable 	Data Type 		Example 	-->
-	
-<!--	resources 	JSON Array 		{[-->
-<!--							{-->
-<!--							"_id" : ObjectId("55277496ecd510591e197670"), -->
-<!--							"resourceType" : ObjectId("55236a2aa5719f79158e5a89"),-->
-<!--							"name" : "101"-->
-<!--							}-->
-<!--							{-->
-<!--							"_id" : ObjectId("55277496ecd510591e197670"), -->
-<!--							"resourceType" : ObjectId("55236a2aa5719f79158e5a89"),-->
-<!--							"name" : "102"-->
-<!--							}-->
-<!--						]}-->
-											
-<!--</pre>-->
-<!--			<h5>Add Resource</h5>-->
-<!--			<form name="addResource" method="post" action="addResource">-->
-<!--			    <label for="resourceName">Resource Name</label>-->
-<!--			    <input type="text" id="resourceName" name="resourceName" value="{{content.resourceName}}" required>-->
-<!--			    <label for="resourceType">Resource Type</label>-->
-<!--			    <input type="text" id="resourceType" name="resourceType" value="{{content.resourceType}}" required>-->
-<!--			    <input type="submit" value="Submit">-->
-<!--			    {{!-- Additional Values to be submitted in request body: --}}-->
-<!--					{{resourceTypes._id}}-->
-<!--			</form>-->
-<!--</section>-->
-
-<!--<section>-->
-<!--	<h3>Settings</h3>-->
-<!--<pre>-->
-<!--Users with 'Owner' role can make changes to the organization info, manage roles, etc.	-->
-<!--</pre>-->
-<!--</section>-->

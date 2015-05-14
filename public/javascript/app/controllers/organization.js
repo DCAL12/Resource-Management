@@ -9,21 +9,24 @@
 	OrganizationController.$inject = ['$routeParams', 'api', 'ngDialog', '$scope', '$location'];
 	
 	function OrganizationController($routeParams, api, ngDialog, $scope, $location) {
-		var viewModel = this;
-		
-		api.getOrganizationDetails($routeParams.organizationId)
+		var viewModel = this,
+			organizationId = $routeParams.organizationId;
+			
+		api.getOrganizationDetails(organizationId)
 			.then(function(data) {
 				viewModel.organization = data;
 			});
-			
-		api.getResourceTypes($routeParams.organizationId)
-			.then(function(data) {
-				viewModel.resourceTypes = data;
-			});
-			
-		api.getRequests($routeParams.organizationId)
+		
+		api.getRequests(organizationId)
 			.then(function(data) {
 				viewModel.requests = data;
+			});
+			
+		api.getResourceTypes(organizationId)
+			.then(function(data) {
+				viewModel.resourceTypes = data;
+				viewModel.resourceTypes.selected = data[0];
+				viewModel.resourceWidget.selectType(viewModel.resourceTypes.selected);
 			});
 			
 		viewModel.requestWidget = {
@@ -36,7 +39,7 @@
 					});
 				},
 				submit: function() {
-					api.addRequest($routeParams.organizationId,
+					api.addRequest(organizationId,
 						viewModel.requestWidget.createRequest.data)
 							.then(function(response) {
 								if (response && response.error) {
@@ -45,10 +48,32 @@
 							});
 					ngDialog.close();
 				}
-			}	
+			},
+			updateRequest: function(request) {
+				api.updateRequest(organizationId, request._id, {status: request.status})
+					.then(function(response) {
+							if (response && response.error) {
+								alert('Something went wrong...');
+							}
+						});
+			}
 		};
 			
 		viewModel.resourceWidget = {
+			selectType: function(resourceType) {
+				viewModel.resources = null;
+				
+				api.getResources(organizationId, resourceType._id)
+					.then(function(data) {
+						viewModel.resources = data;
+						viewModel.resources.attributes = resourceType.attributes;
+						// 	Object
+						// 		.keys(data[0]) // Different attributes from the first resource will be ignored
+						// 		.filter(function(attribute) {
+						// 			return attribute.charAt(0) != '_';
+						// });
+					});
+			},
 			createResourceType: {
 				dialog: function() {
 					ngDialog.open({
@@ -58,7 +83,7 @@
 					});
 				},
 				submit: function() {
-					api.addResourceType($routeParams.organizationId, 
+					api.addResourceType(organizationId, 
 						viewModel.resourceWidget.createResourceType.data)
 							.then(function(response) {
 								if (response && response.error) {
@@ -67,7 +92,41 @@
 							});
 					ngDialog.close();
 				}
-			}	
+			},
+			addAttribute: {
+				dialog: function() {
+					ngDialog.open({
+						template: 'javascript/app/views/dialogs/addAttribute.html',
+						className: 'ngdialog-theme-default',
+						scope: $scope
+					});
+				},
+				submit: function() {
+					api.updateResourceType(organizationId,
+						viewModel.resourceTypes.selected._id,
+						viewModel.resourceWidget.addAttribute.data)
+							.then(function(response) {
+								if (response && response.error) {
+									alert('Something went wrong...');
+								}
+							});
+					ngDialog.close();
+				}
+			},
+			addResource: {
+				submit: function() {
+					console.log('SUBMITTING RESOURCE:');
+					console.log(viewModel.resourceWidget.addResource.data);
+					api.addResource(organizationId, 
+						viewModel.resourceTypes.selected._id, 
+						viewModel.resourceWidget.addResource.data)
+							.then(function(response) {
+								if (response && response.error) {
+									alert('Something went wrong...');
+								}
+							});
+				}
+			}
 		};
 		
 		viewModel.organizationWidget = {
@@ -80,7 +139,7 @@
 					});
 				},
 				confirm: function() {
-					api.deleteOrganization($routeParams.organizationId)
+					api.deleteOrganization(organizationId)
 						.then(function(response) {
 							if (response && !response.error) {
 								return $location.url('/');
