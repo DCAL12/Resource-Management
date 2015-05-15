@@ -11,6 +11,7 @@ router.use(restrictRoute);
 
 router.route('/:organizationId?')
     .get(function(request, response, next) {
+        
         if (!request.params.organizationId) return next();
         
         // Get details for a specific organization

@@ -12,6 +12,8 @@
 		var viewModel = this,
 			organizationId = $routeParams.organizationId;
 			
+		viewModel.resourceTypes = [];
+			
 		api.getOrganizationDetails(organizationId)
 			.then(function(data) {
 				viewModel.organization = data;
@@ -24,7 +26,8 @@
 			
 		api.getResourceTypes(organizationId)
 			.then(function(resourceTypes) {
-				if (resourceTypes.length > 0) {
+				
+				if (resourceTypes && resourceTypes.length > 0) {
 					viewModel.resourceTypes = resourceTypes;
 					viewModel.resourceTypes.selected = resourceTypes[0];
 					viewModel.resourceWidget.selectType(viewModel.resourceTypes.selected);	
@@ -41,12 +44,18 @@
 					});
 				},
 				submit: function() {
+					viewModel.requestWidget.createRequest.processing = true;
 					api.addRequest(organizationId,
 						viewModel.requestWidget.createRequest.data)
 							.then(function(response) {
+								
 								if (response && response.error) {
 									alert('Something went wrong...');
 								}
+								
+								viewModel.requestWidget.createRequest.processing = false;
+								viewModel.requests.push(viewModel.requestWidget.createRequest.data);
+								viewModel.requestWidget.createRequest.data = null;
 							});
 					ngDialog.close();
 				}
@@ -54,15 +63,18 @@
 			updateRequest: function(request) {
 				api.updateRequest(organizationId, request._id, {status: request.status})
 					.then(function(response) {
+							
 							if (response && response.error) {
 								alert('Something went wrong...');
 							}
+							
 						});
 			}
 		};
 			
 		viewModel.resourceWidget = {
 			selectType: function(resourceType) {
+				
 				viewModel.resources = null;
 				
 				api.getResources(organizationId, resourceType._id)
@@ -80,14 +92,32 @@
 					});
 				},
 				submit: function() {
+					viewModel.resourceWidget.createResourceType.processing = true;
 					api.addResourceType(organizationId, 
 						viewModel.resourceWidget.createResourceType.data)
 							.then(function(response) {
+								
 								if (response && response.error) {
 									alert('Something went wrong...');
 								}
+								
+								viewModel.resourceWidget.createResourceType.processing = false;
+								viewModel.resourceTypes.push(viewModel.resourceWidget.createResourceType.data);
+								viewModel.resourceTypes.selected = viewModel.resourceWidget.createResourceType.data;
+								viewModel.resourceWidget.createResourceType.data = null;
+								
+								// Select the newly created resourceType for editing
+								api.getResourceTypeByID(organizationId, response)
+									.then(function(response) {
+										
+										if (response && response.error) {
+											alert('Something went wrong...');
+										}
+										
+										viewModel.resourceWidget.selectType(response);	
+									});
 							});
-					ngDialog.close();
+							ngDialog.close();
 				}
 			},
 			addAttribute: {
@@ -99,26 +129,38 @@
 					});
 				},
 				submit: function() {
+					viewModel.resourceWidget.addAttribute.processing = true;
 					api.addResourceTypeAttribute(
 						viewModel.resourceTypes.selected._id, 
 						viewModel.resourceWidget.addAttribute.data)
 							.then(function(response) {
+								
 								if (response && response.error) {
 									alert('Something went wrong...');
 								}
+								
+								viewModel.resourceWidget.addAttribute.processing = false;
+								viewModel.resources.attributes.push(viewModel.resourceWidget.addAttribute.data);
+								viewModel.resourceWidget.addAttribute.data = null;
 							});
 							ngDialog.close();
 				}
 			},
 			addResource: {
 				submit: function() {
+					viewModel.resourceWidget.addResource.processing = true;
 					api.addResource(organizationId, 
 						viewModel.resourceTypes.selected._id, 
 						viewModel.resourceWidget.addResource.data)
 							.then(function(response) {
+								
 								if (response && response.error) {
 									alert('Something went wrong...');
 								}
+								
+								viewModel.resourceWidget.addResource.processing = false;
+								viewModel.resources.push(viewModel.resourceWidget.addResource.data);
+								viewModel.resourceWidget.addResource.data = null;
 							});
 				}
 			}
@@ -136,6 +178,7 @@
 				confirm: function() {
 					api.deleteOrganization(organizationId)
 						.then(function(response) {
+							
 							if (response && !response.error) {
 								return $location.url('/');
 							}

@@ -9,6 +9,7 @@ router.use(restrictRoute);
 
 router.route('/attributes/:resourceTypeId/:attributeId?')
     .put(function(request, response, next) {
+        console.log(request.params.resourceTypeId);
         resourceTypeService.attributeService.add(
             request.params.resourceTypeId, 
             request.body, 
@@ -35,6 +36,24 @@ router.route('/attributes/:resourceTypeId/:attributeId?')
     
 router.route('/:organizationId/:resourceTypeId?')
     .get(function(request, response, next) {
+        
+        if (!request.params.resourceTypeId) return next();
+        
+        // Get details for a specific resourceType
+        resourceTypeService.getByResourceTypeId(
+            request.params.resourceTypeId, 
+            function(error, resourceType) {
+                if (error) {
+                    return response.status(500)
+                        .json({ error: 'Failed to retrieve resource type' });
+                }
+                response.json(resourceType);
+        });
+    })
+    
+    .get(function(request, response, next) {
+        
+        // Get a list of all resourceTypes
         resourceTypeService.getAllByOrganizationId(
             request.params.organizationId, 
             function(error, resourceTypes) {

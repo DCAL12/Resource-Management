@@ -1,5 +1,4 @@
 var ResourceType = require('../models/ResourceTypeSchema').ResourceType,
-	AttributeSchema = require('../models/AttributeSchema'),
 	mongooseUtil = require('../util/mongoose-util');
 	
 var parseError = mongooseUtil.parseError;	
@@ -15,8 +14,19 @@ exports.getAllByOrganizationId = function(organizationId, next) {
 		});
 };
 
-exports.add = function(data, next) {
-	ResourceType.createWithCollectionName(data, function (error, resourceTypeId) {
+exports.getByResourceTypeId = function(resourceTypeId, next) {
+	ResourceType
+		.findById(resourceTypeId)
+		.exec(function(error, resourceType) {
+		    if (error) {
+		    	return next(parseError(error));
+		    }
+		    next(null, resourceType);
+		});
+};
+
+exports.add = function(resourceType, next) {
+	ResourceType.createWithCollectionName(resourceType, function (error, resourceTypeId) {
 		if (error) {
 			return next(parseError(error));
 		}
@@ -24,9 +34,9 @@ exports.add = function(data, next) {
 	});
 };
 
-exports.update = function(resourceTypeId, data, next) {
+exports.update = function(resourceTypeId, userUpdate, next) {
 	ResourceType
-		.findByIdAndUpdate(resourceTypeId, { $set: data})
+		.findByIdAndUpdate(resourceTypeId, { $set: userUpdate})
 		.exec(function(error) {
 			if (error) {
 				return next(parseError(error));

@@ -1,4 +1,4 @@
-<strong ng-show="!viewModel.organization.name">Loading...</strong>
+<strong ng-show="!viewModel.organization.name">loading...</strong>
 <header ng-show="viewModel.organization.name">
 	
 	<h3 ng-bind="viewModel.organization.name"></h3>
@@ -21,8 +21,8 @@
 <section>
 	<h4>Requests</h4>
 	
-	<strong ng-show="!viewModel.requests">Loading...</strong>
-	<strong ng-show="viewModel.requests.length === 0">There are no requests</strong>
+	<strong ng-show="!viewModel.requests">loading...</strong>
+	<strong ng-show="viewModel.requests.length === 0">there are no requests</strong>
 	
 	<table ng-show="viewModel.requests && viewModel.requests.length > 0">
 		<tr>
@@ -64,7 +64,7 @@
 				.requestWidget
 				.createRequest
 				.dialog()">
-			Add Request
+			add request
 		</li>
 	</ul>
 	
@@ -75,7 +75,7 @@
 	<h4>Resources</h4>
 	
 	<strong ng-show="!viewModel.resourceTypes.length > 0">
-		There are no resource types defined
+		there are no resource types defined
 	</strong>
 	
 	<ul class="action">
@@ -84,7 +84,7 @@
 			 	ng-options="resourceType as resourceType.type for resourceType in viewModel.resourceTypes"
 				ng-model="viewModel.resourceTypes.selected"
 				ng-change="viewModel.resourceWidget.selectType(viewModel.resourceTypes.selected)">
-			 	<option value="">--Select a Resource Type--</option>
+			 	<option value="">--select a resource type--</option>
 			</select> 	
 		</li>
 		
@@ -93,7 +93,7 @@
 				.resourceWidget
 				.createResourceType
 				.dialog()">
-			Add Resource Type
+			add resource type
 		</li>
 	
 		<li ng-show= "viewModel.resourceTypes.selected"
@@ -101,7 +101,7 @@
 				.resourceWidget
 				.addAttribute
 				.dialog()">
-			Add an attribute
+			add an attribute
 		</li>	
 	</ul>
 	
@@ -109,7 +109,7 @@
 		
 		<h5 ng-bind="'Available ' + viewModel.resourceTypes.selected.type + 's'"></h5>
 	
-		<strong ng-show="!viewModel.resources">Loading...</strong>
+		<strong ng-show="!viewModel.resources">loading...</strong>
 		<strong ng-show="viewModel.resources.length === 0"
 				ng-bind="'There are no ' +  viewModel.resourceTypes.selected.type + 's defined'">
 		</strong>
@@ -138,7 +138,7 @@
 			</tr>
 		</div>
 		
-		<!--Add a new resource-->
+			<!--Add a new resource-->
 			<tr>
 				<td ng-repeat="attribute in viewModel.resources.attributes">
 						<input type="{{ attribute.type }}"
@@ -154,12 +154,12 @@
 								ng-if="!attribute.required">
 				</td>
 				
-				<td><input type="submit" value="Add"></td>
-				<span ng-show="viewModel.addResource.processing">
-			    	Processing...
-			    </span>
+				<td>
+					<input ng-if="!viewModel.resourceWidget.addResource.processing" type="submit" value="Add">
+					<input ng-if="viewModel.resourceWidget.addResource.processing" type="submit" value="processing..." disabled>
+				</td>
 			    
-			    <div class="status" ng-show="addResource.$submitted">
+			    <div class="status" ng-show="addResource.$submitted && viewModel.resourceWidget.addResource.data">
 			    	<ul>
 			    		<li ng-repeat="attribute in viewModel.resources.attributes | filter:attribute.required"
 			    			class="error" 
@@ -194,6 +194,6 @@
 			.organizationWidget
 			.deleteOrganization
 				.dialog()">
-		Delete Organization
+		delete organization
 	</p>
 </section>

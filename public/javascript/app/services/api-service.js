@@ -116,6 +116,14 @@
 					.then(respond, giveReason)
 					.catch(error);
 			},
+			getResourceTypeByID: function(organizationId, resourceTypeId) {
+				return $http.get(apiPaths.resourceTypes
+					+ organizationId
+					+ '/'
+					+ resourceTypeId)
+						.then(respond, giveReason)
+						.catch(error)
+			},
 			addResourceType: function(organizationId, data) {
 				return $http.post(apiPaths.resourceTypes + organizationId, data)
 					.then(respond, giveReason)
