@@ -24,20 +24,64 @@ exports.add = function(data, next) {
 	});
 };
 
+exports.update = function(resourceTypeId, data, next) {
+	ResourceType
+		.findByIdAndUpdate(resourceTypeId, { $set: data})
+		.exec(function(error) {
+			if (error) {
+				return next(parseError(error));
+			}
+			next();
+		});
+};
+
 exports.delete = function(resourceTypeId, next) {
 	ResourceType
 		.findByIdAndRemove(resourceTypeId)
 		.exec(function(error) {
 			if (error) {
-				console.log('DELETE ERROR');
-				console.log(error);
 				return next(parseError(error));
 			}
 			next();
 		});	
 };
 
-// exports.getAttributeFields = function() {
-// 	return AttributeSchema;	
-// };
-
+exports.attributeService = {
+	add: function(resourceTypeId, attribute, next) {
+		ResourceType
+			.findById(resourceTypeId)
+			.exec(function(error, resourceType) {
+				if (error) {
+					return next(parseError(error));
+				}
+				resourceType.attributes.push(attribute);
+				resourceType.save(function(error) {
+					var attributeId = null;
+					
+					if (error) {
+						return next(parseError(error));
+					}
+					attributeId = resourceType.attributes[resourceType
+						.attributes.length - 1]._id;
+					next(null, attributeId);
+				});
+			});			
+	}, 
+	delete: function(resourceTypeId, attributeId, next) {
+		ResourceType
+			.findById(resourceTypeId)
+			.exec(function(error, resourceType) {
+				if (error) {
+					return next(parseError(error));
+				}
+				
+				resourceType.attributes.id(attributeId).remove();
+				resourceType.save(function(error) {
+					if (error) {
+						return next(parseError(error));
+					}
+					next();
+				});
+			});		
+	}       
+};

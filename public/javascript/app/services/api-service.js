@@ -13,7 +13,8 @@
 			organizations: '/api/organizations/',
 			requests: '/api/requests/',
 			resources: '/api/resources/',
-			resourceTypes: '/api/resourceTypes/'
+			resourceTypes: '/api/resourceTypes/',
+			attributes: '/api/resourceTypes/attributes/'
 		};
 		
 		return {
@@ -56,9 +57,12 @@
 					.catch(error);
 			},
 			updateRequest: function(organizationId, requestId, data) {
-				return $http.put(apiPaths.requests + organizationId + '/' + requestId, data)
-					.then(respond, giveReason)
-					.catch(error);	
+				return $http.put(apiPaths.requests 
+					+ organizationId 
+					+ '/' 
+					+ requestId, data)
+						.then(respond, giveReason)
+						.catch(error);	
 			},
 			deleteRequest: function(organizationId) {
 				return $http.delete(apiPaths.requests + organizationId)
@@ -118,14 +122,30 @@
 					.catch(error);	
 			},
 			updateResourceType: function(organizationId, resourceTypeId, data) {
-				return $http.put(apiPaths.resourceTypes + organizationId + '/' + resourceTypeId, data)
+				return $http.put(apiPaths.resourceTypes 
+					+ organizationId 
+					+ '/' 
+					+ resourceTypeId, data)
+						.then(respond, giveReason)
+						.catch(error);	
+			},
+			addResourceTypeAttribute: function(resourceTypeId, attribute) {
+				return $http.put(apiPaths.attributes + resourceTypeId, attribute)
 					.then(respond, giveReason)
-					.catch(error);	
+					.catch(error);
 			},
 			deleteResourceType: function(organizationId) {
 				return $http.delete(apiPaths.resourceTypes + organizationId)
 					.then(respond, giveReason)
 					.catch(error);	
+			},
+			deleteResourceTypeAttribute: function(resourceTypeId, attributeId) {
+				return $http.delete(apiPaths.attributes 
+					+ resourceTypeId 
+					+ '/'
+					+ attributeId)
+						.then(respond, giveReason)
+						.catch(error);	
 			}
 		};
 	}

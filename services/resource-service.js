@@ -47,7 +47,7 @@ exports.getByResourceTypeId = function(resourceTypeId, next) {
 		});
 };
 
-exports.add = function(resourceTypeId, data, next) {
+exports.add = function(resourceTypeId, resource, next) {
 	ResourceType
 		.findById(resourceTypeId)
 		.exec(function(error, resourceType) {
@@ -58,7 +58,7 @@ exports.add = function(resourceTypeId, data, next) {
 			}
 			
 			Resource = resourceType.model;
-			Resource.create(data, function(error, resource) {
+			Resource.create(resource, function(error, resource) {
 				if(error) {
 					return next(parseError(error));
 				}

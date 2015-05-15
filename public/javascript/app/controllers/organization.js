@@ -23,10 +23,12 @@
 			});
 			
 		api.getResourceTypes(organizationId)
-			.then(function(data) {
-				viewModel.resourceTypes = data;
-				viewModel.resourceTypes.selected = data[0];
-				viewModel.resourceWidget.selectType(viewModel.resourceTypes.selected);
+			.then(function(resourceTypes) {
+				if (resourceTypes.length > 0) {
+					viewModel.resourceTypes = resourceTypes;
+					viewModel.resourceTypes.selected = resourceTypes[0];
+					viewModel.resourceWidget.selectType(viewModel.resourceTypes.selected);	
+				}
 			});
 			
 		viewModel.requestWidget = {
@@ -67,11 +69,6 @@
 					.then(function(data) {
 						viewModel.resources = data;
 						viewModel.resources.attributes = resourceType.attributes;
-						// 	Object
-						// 		.keys(data[0]) // Different attributes from the first resource will be ignored
-						// 		.filter(function(attribute) {
-						// 			return attribute.charAt(0) != '_';
-						// });
 					});
 			},
 			createResourceType: {
@@ -102,21 +99,19 @@
 					});
 				},
 				submit: function() {
-					api.updateResourceType(organizationId,
-						viewModel.resourceTypes.selected._id,
+					api.addResourceTypeAttribute(
+						viewModel.resourceTypes.selected._id, 
 						viewModel.resourceWidget.addAttribute.data)
 							.then(function(response) {
 								if (response && response.error) {
 									alert('Something went wrong...');
 								}
 							});
-					ngDialog.close();
+							ngDialog.close();
 				}
 			},
 			addResource: {
 				submit: function() {
-					console.log('SUBMITTING RESOURCE:');
-					console.log(viewModel.resourceWidget.addResource.data);
 					api.addResource(organizationId, 
 						viewModel.resourceTypes.selected._id, 
 						viewModel.resourceWidget.addResource.data)

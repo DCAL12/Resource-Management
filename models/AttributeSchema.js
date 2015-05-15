@@ -5,8 +5,7 @@ var Schema = mongoose.Schema;
 module.exports = new Schema({
 	name: {
 		type: String, 
-		required: 'An attribute name is required',
-		unique: true
+		required: 'An attribute name is required'
 	},
 	type: {
 		type: String,
@@ -31,4 +30,4 @@ module.exports = new Schema({
 	max: {
 		type: Number
 	}	
-}, { _id: false });
+});

@@ -36,11 +36,27 @@ resourceTypeSchema.statics.createWithCollectionName = function(resourceType, nex
 			+ '_' 
 			+ resourceType.type)
 			.toLocaleLowerCase();
+			
 		ResourceType.create(resourceType, function (error, resourceType) {
+			
 			if (error) {
 				return next(error);
 			}
-			next(null, resourceType._id);
+			// Set a default 'id' attribute	
+			resourceType.attributes.push({
+				name: 'id',
+				type: 'Number',
+				unique: true,
+				required: true
+			});
+			resourceType.save(function(error) {
+				if (error) {
+					console.log('ERROR 2');
+					console.log(error);
+					return next(error);
+				}
+				next(null, resourceType._id);
+			});
 		});
 	});	
 };

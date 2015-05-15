@@ -59,13 +59,14 @@
 		</tr>
 	</table>
 	
-	<p class="action"
-		ng-click="viewModel
-			.requestWidget
-			.createRequest
-			.dialog()">
-		Add Request
-	</p>
+	<ul class="action">
+		<li	ng-click="viewModel
+				.requestWidget
+				.createRequest
+				.dialog()">
+			Add Request
+		</li>
+	</ul>
 	
 </section>
 
@@ -73,8 +74,12 @@
 	
 	<h4>Resources</h4>
 	
+	<strong ng-show="!viewModel.resourceTypes.length > 0">
+		There are no resource types defined
+	</strong>
+	
 	<ul class="action">
-		<li>
+		<li ng-show= "viewModel.resourceTypes.length > 0">
 			<select
 			 	ng-options="resourceType as resourceType.type for resourceType in viewModel.resourceTypes"
 				ng-model="viewModel.resourceTypes.selected"
@@ -83,7 +88,6 @@
 			</select> 	
 		</li>
 		
-	
 		<li
 			ng-click="viewModel
 				.resourceWidget
@@ -92,7 +96,7 @@
 			Add Resource Type
 		</li>
 	
-		<li class="action"
+		<li ng-show= "viewModel.resourceTypes.selected"
 			ng-click="viewModel
 				.resourceWidget
 				.addAttribute
@@ -117,7 +121,10 @@
 			ng-submit="addResource.$valid && 
 				viewModel.resourceWidget.addResource.submit()">
 		
-		<table class="data" ng-show="viewModel.resources && viewModel.resources.length > 0">
+		<!--Existing Resources-->
+		<table class="data">
+		
+		<div ng-if="viewModel.resources && viewModel.resources.length > 0">
 			<tr>
 				<th ng-repeat="attribute in viewModel.resources.attributes" 
 					ng-bind="attribute.name"></th>
@@ -129,7 +136,9 @@
 				<td ng-repeat="attribute in viewModel.resources.attributes"
 					ng-bind="resource[attribute.name]"></td>	
 			</tr>
-			
+		</div>
+		
+		<!--Add a new resource-->
 			<tr>
 				<td ng-repeat="attribute in viewModel.resources.attributes">
 						<input type="{{ attribute.type }}"
@@ -161,7 +170,8 @@
 			    </div>
 			    
 			</tr>
-		</table>
+		</table>	
+		
 		</form>
 	</div>
 	
