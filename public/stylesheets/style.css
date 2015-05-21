@@ -484,3 +484,7 @@ a:hover {
     text-align: center;
     font-size: 20px;
 }
+
+tr.odd {
+    background-color: lightseagreen;
+}
