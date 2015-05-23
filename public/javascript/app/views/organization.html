@@ -3,22 +3,30 @@
 	
 	<h3 ng-bind="viewModel.organization.name"></h3>
 	
-	<!--<nav role="navigation" class="workspaceNavigation">-->
-	<!--    <ul>-->
-	<!--        <li><a href="timeline" title="Timeline">Timeline</a></li>-->
-	<!--        <li><a href="requests" title="Requests">Requests</a></li>-->
-	<!--        <li><a href="resources" title="Resources">Resources</a></li>-->
-	<!--        <li><a href="organization" title="Organization Info">Organization Info</a></li>-->
-	<!--    </ul>-->
-	<!--</nav>	-->
+	<nav role="navigation" class="workspaceTabs">
+	    <ul>
+	        <li ng-click="viewModel.tab.setActiveTab('timeline')">
+	        	Timeline
+	        </li>
+	        <li ng-click="viewModel.tab.setActiveTab('requests')">
+	        	Requests
+	        </li>
+	        <li ng-click="viewModel.tab.setActiveTab('resources')">
+	        	Resources
+	        </li>
+	        <li ng-click="viewModel.tab.setActiveTab('organization')">
+	        	Organization Info
+	        </li>
+	    </ul>
+	</nav>	
 </header>
 
-<section>
+<section ng-show="viewModel.tab.activeTab === 'timeline'">
 	<h4>Timeline</h4>
 	GUI for visually representing resources and requests on a timeline. 
 </section>
 
-<section>
+<section ng-show="viewModel.tab.activeTab === 'requests'">
 	<h4>Requests</h4>
 	
 	<strong ng-show="!viewModel.requests">loading...</strong>
@@ -70,7 +78,7 @@
 	
 </section>
 
-<section>
+<section ng-show="viewModel.tab.activeTab === 'resources'">
 	
 	<h4>Resources</h4>
 	
@@ -177,7 +185,7 @@
 	
 </section>
 
-<section>
+<section ng-show="viewModel.tab.activeTab === 'organization'">
 	<h4>Organization Info</h4>
 	<table>
 		<tr>

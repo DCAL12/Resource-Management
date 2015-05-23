@@ -110,4 +110,3 @@ exports.delete = function(resourceTypeId, resourceId, next) {
 				});		
 		});	
 };
-

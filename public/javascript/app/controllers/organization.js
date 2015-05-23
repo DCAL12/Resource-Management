@@ -13,6 +13,11 @@
 			organizationId = $routeParams.organizationId;
 			
 		viewModel.resourceTypes = [];
+		viewModel.tab = {
+			tabs: ['timeline', 'requests', 'resources', 'organization'],
+			activeTab: 'timeline',
+			setActiveTab: function(tabName) {viewModel.tab.activeTab = tabName}
+		};
 			
 		api.getOrganizationDetails(organizationId)
 			.then(function(data) {
@@ -44,19 +49,27 @@
 					});
 				},
 				submit: function() {
+					
+					var newRequest = viewModel.requestWidget.createRequest.data;
+					
 					viewModel.requestWidget.createRequest.processing = true;
-					api.addRequest(organizationId,
-						viewModel.requestWidget.createRequest.data)
-							.then(function(response) {
-								
-								if (response && response.error) {
-									alert('Something went wrong...');
-								}
-								
-								viewModel.requestWidget.createRequest.processing = false;
-								viewModel.requests.push(viewModel.requestWidget.createRequest.data);
-								viewModel.requestWidget.createRequest.data = null;
-							});
+					api.addRequest(organizationId, newRequest)
+						.then(function(response) {
+							
+							if (response && response.error) {
+								alert('Something went wrong...');
+							}
+							else {
+								// temporary placeholder; will be filled in by 
+								// with real data on next refresh
+								newRequest._createdBy = {};
+								newRequest._createdBy.email = 'me';
+								newRequest.createdTime = 'just now';
+								viewModel.requests.push(viewModel.requestWidget.createRequest.data);	
+							}
+							viewModel.requestWidget.createRequest.processing = false;
+							viewModel.requestWidget.createRequest.data = null;
+						});
 					ngDialog.close();
 				}
 			},
