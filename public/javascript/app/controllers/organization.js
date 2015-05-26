@@ -15,13 +15,25 @@
 		viewModel.resourceTypes = [];
 		viewModel.tab = {
 			tabs: ['timeline', 'requests', 'resources', 'organization'],
-			activeTab: 'timeline',
+			activeTab: 'organization',
 			setActiveTab: function(tabName) {viewModel.tab.activeTab = tabName}
 		};
 			
 		api.getOrganizationDetails(organizationId)
 			.then(function(data) {
 				viewModel.organization = data;
+			});
+			
+		api.getRole(organizationId)
+			.then(function(result) {
+				viewModel.role = result ? 
+					result.role :
+					viewModel.organization.settings.defaultAccess;
+			});
+			
+		api.getAllRoles(organizationId)
+			.then(function(results) {
+				viewModel.userRoles = results;
 			});
 		
 		api.getRequests(organizationId)
@@ -82,6 +94,15 @@
 							}
 							
 						});
+			},
+			cancelRequest: function(request) {
+				api.updateRequest(organizationId, request._id, {status: 'cancelled'})
+					.then(function(response) {
+						
+						if (response && response.error) {
+								alert('Something went wrong...');
+							}	
+					});
 			}
 		};
 			
@@ -199,7 +220,35 @@
 						});
 					ngDialog.close();
 				}
-			}	
+			},
+			addUserRole: {
+				dialog: function() {
+					ngDialog.open({
+						template: 'javascript/app/views/dialogs/addUserRole.html',
+						className: 'ngdialog-theme-default',
+						scope: $scope
+					});
+				},
+				submit: function() {
+					console.log('Adding User Role');
+					console.log(viewModel.organizationWidget.addUserRole.data);
+					viewModel.organizationWidget.addUserRole.processing = true;
+					api.addRole(
+						organizationId, 
+						viewModel.organizationWidget.addUserRole.data)
+							.then(function(response) {
+								
+								if (response && !response.error) {
+									alert('Something went wrong...');
+								}
+								viewModel.organizationWidget.addUserRole.processing = false;
+							});
+						ngDialog.close();
+				}
+			},
+			updateUserRole: function(user) {
+				console.log('update ' + user._user._id + ' to ' + user.role);	
+			}
 		};
 	}
 }());

@@ -5,12 +5,19 @@
 	
 	<nav role="navigation" class="workspaceTabs">
 	    <ul>
-	        <li ng-click="viewModel.tab.setActiveTab('timeline')">
+	        <li ng-if="viewModel.role === 'manager' || 
+	        			viewModel.role === 'owner'"
+	        	ng-click="viewModel.tab.setActiveTab('timeline')">
 	        	Timeline
 	        </li>
-	        <li ng-click="viewModel.tab.setActiveTab('requests')">
+	        
+	        <li ng-if="viewModel.role === 'requestor' ||
+	        			viewModel.role === 'manager' || 
+	        			viewModel.role === 'owner'"
+	        	ng-click="viewModel.tab.setActiveTab('requests')">
 	        	Requests
 	        </li>
+	        
 	        <li ng-click="viewModel.tab.setActiveTab('resources')">
 	        	Resources
 	        </li>
@@ -18,15 +25,28 @@
 	        	Organization Info
 	        </li>
 	    </ul>
-	</nav>	
+	</nav>
+	
+	<div>
+		<span ng-bind="'Role: ' + viewModel.role"></span>
+	</div>
 </header>
 
-<section ng-show="viewModel.tab.activeTab === 'timeline'">
+<section 
+	ng-if="viewModel.role === 'manager'|| viewModel.role === 'owner'"
+	ng-show="viewModel.tab.activeTab === 'timeline'">
+	
 	<h4>Timeline</h4>
 	GUI for visually representing resources and requests on a timeline. 
+
 </section>
 
-<section ng-show="viewModel.tab.activeTab === 'requests'">
+<section 
+	ng-if="viewModel.role === 'requestor' ||
+			viewModel.role === 'manager' || 
+			viewModel.role === 'owner'"
+	ng-show="viewModel.tab.activeTab === 'requests'">
+	
 	<h4>Requests</h4>
 	
 	<strong ng-show="!viewModel.requests">loading...</strong>
@@ -54,16 +74,27 @@
 			<td ng-bind="request.location"></td>
 			<td ng-bind="request._createdBy.email"></td>
 			<td ng-bind="request.createdTime"></td>
-			<td>
+			
+			<td ng-if="viewModel.role === 'manager'|| viewModel.role === 'owner'">
 				<select
 					ng-model="request.status"
 					ng-change="viewModel.requestWidget.updateRequest(request)">
-					<option>pending</option> 
-					<option>approved</option>
-					<option>denied</option>
-					<option>cancelled</option>
+						<option>pending</option> 
+						<option>approved</option>
+						<option>denied</option>
+						<option>cancelled</option>
 				</select>
 			</td>
+			
+			<td ng-if="viewModel.role === 'requestor' ||
+	        			viewModel.role === 'manager' || 
+	        			viewModel.role === 'owner'"
+	        	ng-bind="request.status"></td>
+	        <td ng-if="viewModel.role === 'requestor'">
+	        	<button ng-click="viewModel.requestWidget.cancelRequest(request)">
+	        		cancel
+	        	</button>
+	        </td>
 		</tr>
 	</table>
 	
@@ -80,13 +111,22 @@
 
 <section ng-show="viewModel.tab.activeTab === 'resources'">
 	
-	<h4>Resources</h4>
+	<h4 ng-if="viewModel.role === 'manager'|| viewModel.role === 'owner'">
+		Resources
+	</h4>
+	
+	<h4 ng-if="viewModel.resourceTypes.length > 0 && 
+		(viewModel.role === 'viewer'|| viewModel.role === 'requestor')">
+			Resource types available to request
+	</h4>
 	
 	<strong ng-show="!viewModel.resourceTypes.length > 0">
-		there are no resource types defined
+		There are no resource types defined
 	</strong>
 	
-	<ul class="action">
+	<ul ng-if="viewModel.role === 'manager'|| viewModel.role === 'owner'"
+		class="action">
+		
 		<li ng-show= "viewModel.resourceTypes.length > 0">
 			<select
 			 	ng-options="resourceType as resourceType.type for resourceType in viewModel.resourceTypes"
@@ -112,8 +152,14 @@
 			add an attribute
 		</li>	
 	</ul>
+		
+	<ul ng-if="viewModel.role === 'viewer'|| viewModel.role === 'requestor'">
+		<li ng-repeat="resourceType in viewModel.resourceTypes"
+			ng-bind="resourceType.type"></li>		
+	</ul>
 	
-	<div ng-show= "viewModel.resourceTypes.selected">
+	<div ng-if="viewModel.role === 'manager'|| viewModel.role === 'owner'"
+		ng-show= "viewModel.resourceTypes.selected">
 		
 		<h5 ng-bind="'Available ' + viewModel.resourceTypes.selected.type + 's'"></h5>
 	
@@ -186,22 +232,92 @@
 </section>
 
 <section ng-show="viewModel.tab.activeTab === 'organization'">
+	
 	<h4>Organization Info</h4>
+	
 	<table>
+		
 		<tr>
 			<td>Name</td>
 			<td ng-bind="viewModel.organization.name"></td>
 		</tr>
+		
 		<tr>
 			<td>Description</td>
 			<td ng-bind="viewModel.organization.description"></td>
 		</tr>
+		
+		<tr>
+			<td>Role Manager</td>
+			<td>
+				<a ng-href="mailto:{{viewModel.organization.settings.roleManager}}"
+					ng-bind="viewModel.organization.settings.roleManager"></a>
+			</td>
+		</tr>
 	</table>
-	<p class="action"
+	
+	<p ng-if="viewModel.role === 'owner'"
+		class="action"
 		ng-click="viewModel
 			.organizationWidget
 			.deleteOrganization
-				.dialog()">
+			.dialog()">
 		delete organization
 	</p>
+	
+	<div ng-if="viewModel.role === 'manager'|| viewModel.role === 'owner'">
+		
+		<h5>Manage Roles</h5>
+		<table>
+			
+			<tr>
+				<th>First</th>
+				<th>Last</th>
+				<th>Email</th>
+				<th>Role</th>
+			</tr>
+			
+			<tr ng-repeat="user in viewModel.userRoles">
+				<td ng-bind=user._user.firstName></td>
+				<td ng-bind="user._user.lastName"></td>
+				<td ng-bind=user._user.email></td>
+				
+				<td ng-if="viewModel.role === 'owner'">
+					<select
+						ng-model="user.role"
+						ng-change="viewModel.organizationWidget.updateUserRole(user)">
+							<option>viewer</option> 
+							<option>requestor</option>
+							<option>manager</option>
+							<option>owner</option>
+					</select>	
+				</td>
+				
+				<td ng-if="user.role !== 'owner' && viewModel.role !== 'owner'">
+					<select
+						ng-model="user.role"
+						ng-change="viewModel.organizationWidget.updateUserRole(user)">
+							<option>viewer</option> 
+							<option>requestor</option>
+							<option>manager</option>
+					</select>	
+				</td>
+				
+				<td ng-if="user.role === 'owner' && viewModel.role !== 'owner'"
+					ng-bind="user.role">
+				</td>
+			</tr>
+		
+		</table>
+		
+		<p class="action"
+			ng-click="viewModel
+				.organizationWidget
+				.addUserRole
+				.dialog()">
+			add user
+		</p>
+		
+	</div>
+	
 </section>

@@ -1,6 +1,5 @@
 var express = require('express'),
     organizationService = require('../../services/organization-service'),
-    userService = require('../../services/user-service'),
     workspaceService = require('../../services/workspace-service'),
     restrictRoute = require('../../authentication/restrictRoute');
 
@@ -17,6 +16,7 @@ router.route('/:organizationId?')
         // Get details for a specific organization
         organizationService.findByOrganizationId(
             request.params.organizationId, function(error, organization) {
+                
                 if (error) {
                     return response.status(500).json({ 
                         error: 'Failed to retrieve the organization' 
@@ -40,6 +40,8 @@ router.route('/:organizationId?')
     })
     
     .post(function(request, response, next) {
+        console.log('new org:');
+        console.log(request.body);
         organizationService.add(request.body, function(error, organizationId) {
             if (error) {
                 return response.status(500).json({ 
@@ -47,7 +49,7 @@ router.route('/:organizationId?')
                 });
             }
             
-            workspaceService.add(request.user._id, organizationId, function(error) {
+            workspaceService.add(request.user._id, organizationId, 'owner', function(error) {
                 if (error) {
                     return response.status(500).json({ 
                         error: 'Failed to create user workspace', 

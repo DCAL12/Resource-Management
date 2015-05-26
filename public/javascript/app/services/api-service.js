@@ -11,6 +11,7 @@
 	function apiFactory($http) {
 		var apiPaths = {
 			organizations: '/api/organizations/',
+			workspaces: '/api/workspaces/',
 			requests: '/api/requests/',
 			resources: '/api/resources/',
 			resourceTypes: '/api/resourceTypes/',
@@ -43,6 +44,23 @@
 				return $http.delete(apiPaths.organizations + organizationId)
 					.then(respond, giveReason)
 					.catch(error);	
+			},
+			
+			// User Role API
+			getRole: function(organizationId) {
+				return $http.get(apiPaths.workspaces + organizationId + '/role')	
+					.then(respond, giveReason)
+					.catch(error);
+			},
+			getAllRoles: function(organizationId) {
+				return $http.get(apiPaths.workspaces + organizationId)
+					.then(respond, giveReason)
+					.catch(error);
+			},
+			addRole: function(organizationId, data) {
+				return $http.post(apiPaths.workspaces + organizationId, data)
+					.then(respond, giveReason)
+					.catch(error);
 			},
 			
 			// Request API
@@ -122,7 +140,7 @@
 					+ '/'
 					+ resourceTypeId)
 						.then(respond, giveReason)
-						.catch(error)
+						.catch(error);
 			},
 			addResourceType: function(organizationId, data) {
 				return $http.post(apiPaths.resourceTypes + organizationId, data)

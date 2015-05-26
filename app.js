@@ -18,6 +18,7 @@ var index = require('./routes/index'),
     api_requests = require('./routes/api/requests'),
     api_resources = require('./routes/api/resources'),
     api_resourceTypes = require('./routes/api/resourceTypes'),
+    api_workspaces = require('./routes/api/workspaces'),
     config = require('./config'),
     passportConfig = require('./authentication/passport-config');
     
@@ -58,6 +59,7 @@ app.use('/api/organizations', api_organizations);
 app.use('/api/requests', api_requests);
 app.use('/api/resources', api_resources);
 app.use('/api/resourceTypes', api_resourceTypes);
+app.use('/api/workspaces', api_workspaces);
 
 // Catch 404 and forward to error handler
 app.use(function (request, response, next) {

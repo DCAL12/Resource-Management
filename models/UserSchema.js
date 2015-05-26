@@ -24,10 +24,6 @@ var userSchema = new Schema({
 		type: String, 
 		required: 'Password is required'
 	},
-	_defaultOrganization: {
-		type: ObjectId,
-		ref: 'Organization',	
-	},
 	createdOn: {
 		type: Date, 
 		default: Date.now

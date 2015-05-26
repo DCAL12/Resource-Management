@@ -25,14 +25,23 @@
 			name="description" 
 			ng-model="viewModel.createOrganization.data.description" 
 			required>
-	    
-	    <label for="defaultOrganization">Make this my default workspace</label>
+			
+		<label for="defaultAccess">Default Access</label>
+	    <select 
+			id="defaultAccess" 
+			name="defaultAccess" 
+			form="createOrganization"
+			ng-model="viewModel.createOrganization.data.settings.defaultAccess">
+				<option selected>viewer</option>
+				<option>requestor</option>
+		</select>
+		
+		<label for="roleManager">Role Manager</label>
 	    <input 
-	    	type="checkbox" 
-			id="defaultOrganization" 
-			name="defaultOrganization" 
-			value="true" 
-			checked>
+	    	type="text" 
+			id="roleManager" 
+			name="roleManager" 
+			ng-model="viewModel.createOrganization.data.settings.roleManager">
 	    
 	    <input type="submit" value="Create">
 	    <span ng-show="viewModel.createOrganization.processing">

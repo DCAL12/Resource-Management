@@ -23,7 +23,12 @@ var organizationSchema = new Schema({
 			trim: true,
 			enum: ['none', 'viewer', 'requestor', 'manager', 'owner'],
 			default: 'viewer'
-		}	
+		},
+		roleManager: {
+			type: String,
+			lowercase: true,
+			trim: true
+		}
 	},
 	_createdBy: {
 		type: ObjectId,

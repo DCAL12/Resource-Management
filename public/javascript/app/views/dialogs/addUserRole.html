@@ -1,0 +1,53 @@
+<div class="dialog">
+	<h1 ng-bind="'Grant permissions to ' + viewModel.organization.name"></h1>
+
+	<form 
+		name="addUserRole" 
+		method="post" 
+		novalidate
+		ng-submit="addUserRole.$valid && 
+			viewModel.organizationWidget.addUserRole.submit()">
+	    
+	    <label for="email">Email</label>
+	    <input 
+	    	type="text" 
+			id="email" 
+			name="email" 
+			ng-model="viewModel.organizationWidget.addUserRole.data.email" 
+			autofocus
+			required>
+		
+		<label for="role">Role</label>
+		<select 
+			id="role" 
+			name="role" 
+			form="addUserRole"
+			ng-model="viewModel.organizationWidget.addUserRole.data.role"
+			required>
+				<option selected>requestor</option>
+				<option>manager</option>
+				<option ng-if="viewModel.role === 'owner'">owner</option>
+		</select>
+	    
+	    <input type="submit" value="Add">
+	    <span ng-show="viewModel.addUserRole.processing">
+	    	Processing...
+	    </span>
+	    
+	    <div class="status" ng-show="addUserRole.$submitted">
+	    	<ul>
+	    		<li 
+	    			class="error" 
+	    			ng-show="addUserRole.email.$error.required">
+	    			An existing user's email is required
+	    		</li>
+	    		<li 
+	    			class="error" 
+	    			ng-show="addUserRole.role.$error.required">
+	    			A user role is required
+	    		</li>
+	    	</ul>
+	    </div>
+	   
+	</form>	
+</div>
