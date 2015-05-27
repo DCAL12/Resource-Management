@@ -7,28 +7,42 @@
 		novalidate
 		ng-submit="addUserRole.$valid && 
 			viewModel.organizationWidget.addUserRole.submit()">
-	    
-	    <label for="email">Email</label>
-	    <input 
-	    	type="text" 
-			id="email" 
-			name="email" 
-			ng-model="viewModel.organizationWidget.addUserRole.data.email" 
-			autofocus
-			required>
 		
-		<label for="role">Role</label>
-		<select 
-			id="role" 
-			name="role" 
-			form="addUserRole"
-			ng-model="viewModel.organizationWidget.addUserRole.data.role"
-			required>
-				<option selected>requestor</option>
-				<option>manager</option>
-				<option ng-if="viewModel.role === 'owner'">owner</option>
-		</select>
-	    
+		<table>
+			<tr>
+				<td>
+					<label for="email">Email</label>	
+				</td>
+				<td>
+					<input 
+			    	type="text" 
+					id="email" 
+					name="email" 
+					ng-model="viewModel.organizationWidget.addUserRole.data.email" 
+					autofocus
+					required>	
+				</td>
+			</tr>
+			
+			<tr>
+				<td>
+					<label for="role">Role</label>	
+				</td>
+				<td>
+					<select 
+						id="role" 
+						name="role" 
+						form="addUserRole"
+						ng-model="viewModel.organizationWidget.addUserRole.data.role"
+						required>
+							<option selected>requestor</option>
+							<option>manager</option>
+							<option ng-if="viewModel.role === 'owner'">owner</option>
+					</select>	
+				</td>
+			</tr>
+		</table>
+	  	
 	    <input type="submit" value="Add">
 	    <span ng-show="viewModel.addUserRole.processing">
 	    	Processing...

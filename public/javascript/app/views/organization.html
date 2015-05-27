@@ -28,7 +28,12 @@
 	</nav>
 	
 	<div>
-		<span ng-bind="'Role: ' + viewModel.role"></span>
+		<span ng-bind="'role: ' + viewModel.role + ' '"></span>
+		<span ng-if="viewModel.organization.settings.roleManager && viewModel.role !== 'owner'">
+			<a ng-href="mailto:{{viewModel.organization.settings.roleManager}}">
+				| request access
+			</a>
+		</span>
 	</div>
 </header>
 

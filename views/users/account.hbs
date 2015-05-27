@@ -8,45 +8,69 @@
 </header>
 
 <section>
-<h3>Update Profile</h3>
-
-<form name="modifyUser" method="put" action="update">
-    <label for="firstName">First Name</label>
-    <input type="text" id="firstName" name="firstName" value="{{user.firstName}}" required>
-    <label for="lastName">Last Name</label>
-    <input type="text" id="lastName" name="lastName" value="{{user.lastName}}" required>
-    <label for="email">Email</label>
-    <input type="email" id="email" name="email" value="{{user.email}}" required>
+    <h3>Update Profile</h3>
     
-    {{#if workspaces}}
-        <label for="defaultOrganization">Default Organization</label>
-        <select id="defaultOrganization" name="defaultOrganization">
-            {{#if user.defaultOrganization}}
-                <option value="{{user.defaultOrganization}}" selected>
-                    {{user.defaultOrganization}}
-                </option>    
-            {{/if}}
-            {{#each workspaces}}
-                <option value="{{this.organization}}">
-                    {{this.organization}}
-                </option>
-            {{/each}}
-        </select>
-    {{/if}}
-    
-    <input type="submit" value="Update">
-</form>    
+    <form name="modifyUser" method="put" action="update">
+        
+        <table>
+            <tr>
+                <td>
+                    <label for="firstName">First Name</label>    
+                </td>
+                <td>
+                    <input type="text" id="firstName" name="firstName" value="{{user.firstName}}" required>    
+                </td>
+            </tr>
+            
+            <tr>
+                <td>
+                    <label for="lastName">Last Name</label>    
+                </td>
+                <td>
+                    <input type="text" id="lastName" name="lastName" value="{{user.lastName}}" required>    
+                </td>
+            </tr>
+            
+            <tr>
+                <td>
+                    <label for="email">Email</label>    
+                </td>
+                <td>
+                    <input type="email" id="email" name="email" value="{{user.email}}" required>    
+                </td>
+            </tr>
+        </table>
+        
+        <input type="submit" value="Update">
+    </form>    
 </section>
 
 <section>
-<h3>Change Password</h3>
-<form name="changePassword" method="put" action="change-password">
-    <label for="password">New Password</label>
-    <input type="password" id="password" name="password" required>
-    <label for="password">Confirm Password</label>
-    <input type="password" id="confirmPassword" name="confirmPassword" required>
-    <input type="submit" value="Change Password">
-</form>
+    <h3>Change Password</h3>
+    
+    <form name="changePassword" method="put" action="change-password">
+        
+        <table>
+            <tr>
+                <td>
+                    <label for="password">New Password</label>    
+                </td>
+                <td>
+                    <input type="password" id="password" name="password" required>    
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="password">Confirm Password</label>    
+                </td>
+                <td>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>    
+                </td>
+            </tr>    
+        </table>
+
+        <input type="submit" value="Change Password">
+    </form>
 </section>
 
 <footer>

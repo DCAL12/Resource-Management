@@ -8,41 +8,67 @@
 		novalidate
 		ng-submit="createOrganization.$valid && 
 			viewModel.createOrganization.submit()">
-	    
-	    <label for="organizationName">Organization Name</label>
-	    <input 
-	    	type="text" 
-			id="organizationName" 
-			name="name" 
-			ng-model="viewModel.createOrganization.data.name" 
-			autofocus
-			required>
-	    
-	    <label for="description">Description</label>
-	    <input 
-	    	type="text" 
-			id="description" 
-			name="description" 
-			ng-model="viewModel.createOrganization.data.description" 
-			required>
-			
-		<label for="defaultAccess">Default Access</label>
-	    <select 
-			id="defaultAccess" 
-			name="defaultAccess" 
-			form="createOrganization"
-			ng-model="viewModel.createOrganization.data.settings.defaultAccess">
-				<option selected>viewer</option>
-				<option>requestor</option>
-		</select>
 		
-		<label for="roleManager">Role Manager</label>
-	    <input 
-	    	type="text" 
-			id="roleManager" 
-			name="roleManager" 
-			ng-model="viewModel.createOrganization.data.settings.roleManager">
-	    
+		<table>
+			<tr>
+				<td>
+					<label for="organizationName">Organization Name</label>	
+				</td>
+				<td>
+					<input 
+			    	type="text" 
+					id="organizationName" 
+					name="name" 
+					ng-model="viewModel.createOrganization.data.name" 
+					autofocus
+					required>	
+				</td>
+			</tr>
+			
+			<tr>
+				<td>
+					<label for="description">Description</label>	
+				</td>
+				<td>
+					<input 
+			    	type="text" 
+					id="description" 
+					name="description" 
+					ng-model="viewModel.createOrganization.data.description" 
+					required>	
+				</td>
+			</tr>
+			
+			<tr>
+				<td>
+					<label for="defaultAccess">Default Access</label>	
+				</td>
+				<td>
+					<select 
+						id="defaultAccess" 
+						name="defaultAccess" 
+						form="createOrganization"
+						ng-model="viewModel.createOrganization.data.settings.defaultAccess">
+							<option selected>viewer</option>
+							<option>requestor</option>
+					</select>	
+				</td>
+			</tr>
+			
+			<tr>
+				<td>
+					<label for="roleManager">Role Manager</label>	
+				</td>
+				<td>
+					<input 
+				    	type="text" 
+						id="roleManager" 
+						name="roleManager" 
+						ng-model="viewModel.createOrganization.data.settings.roleManager">	
+				</td>
+			</tr>
+		</table>
+
 	    <input type="submit" value="Create">
 	    <span ng-show="viewModel.createOrganization.processing">
 	    	Processing...

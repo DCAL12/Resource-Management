@@ -7,16 +7,54 @@
 </header>
 
 <form name="createUser" method="post">
-    <label for="firstName">First Name</label>
-    <input type="text" id="firstName" name="firstName" value="{{content.firstName}}" required>
-    <label for="lastName">Last Name</label>
-    <input type="text" id="lastName" name="lastName" value="{{content.lastName}}" required>
-    <label for="email">Email</label>
-    <input type="email" id="email" name="email" value="{{content.email}}" required>
-    <label for="password">Password</label>
-    <input type="password" id="password" name="password" required>
-    <label for="password">Confirm Password</label>
-    <input type="password" id="confirmPassword" name="confirmPassword" required>
+    
+    <table>
+        <tr>
+            <td>
+                 <label for="firstName">First Name</label>   
+            </td>
+            <td>
+                <input type="text" id="firstName" name="firstName" value="{{content.firstName}}" required>    
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                <label for="lastName">Last Name</label>    
+            </td>
+            <td>
+                <input type="text" id="lastName" name="lastName" value="{{content.lastName}}" required>   
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                <label for="email">Email</label>    
+            </td>
+            <td>
+                <input type="email" id="email" name="email" value="{{content.email}}" required>    
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                <label for="password">Password</label>    
+            </td>
+            <td>
+                <input type="password" id="password" name="password" required>        
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                <label for="password">Confirm Password</label>    
+            </td>
+            <td>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>    
+            </td>
+        </tr>
+    </table>
+    
     <input type="submit" value="Create Account">
 </form>
 

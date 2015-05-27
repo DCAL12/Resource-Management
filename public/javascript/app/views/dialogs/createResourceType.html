@@ -7,22 +7,30 @@
 		novalidate
 		ng-submit="createResourceType.$valid && 
 			viewModel.resourceWidget.createResourceType.submit()">
-	    
-	    <label for="type">Type Name</label>
-	    <input 
-	    	type="text" 
-			id="type" 
-			name="type" 
-			ng-model="viewModel.resourceWidget.createResourceType.data.type" 
-			autofocus
-			required>
-	    
+		
+		<table>
+			<tr>
+				<td>
+					<label for="type">Type Name</label>	
+				</td>
+				<td>
+					<input 
+			    	type="text" 
+					id="type" 
+					name="type" 
+					ng-model="viewModel.resourceWidget.createResourceType.data.type" 
+					autofocus
+					required>	
+				</td>
+			</tr>
+		</table>
+
 	    <input type="submit" value="Create">
-	    <span ng-show="viewModel.createOrganization.processing">
+	    <span ng-show="viewModel.resourceWidget.createResourceType.processing">
 	    	Processing...
 	    </span>
 	    
-	    <div class="status" ng-show="createOrganization.$submitted">
+	    <div class="status" ng-show="createResourceType.$submitted">
 	    	<ul>
 	    		<li 
 	    			class="error" 
