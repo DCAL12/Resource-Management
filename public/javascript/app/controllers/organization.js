@@ -201,6 +201,16 @@
 		};
 		
 		viewModel.organizationWidget = {
+			updateOrganization: function() {
+				viewModel.organizationWidget.updateOrganization.processing = true;
+				api.updateOrganization(organizationId, viewModel.organization)
+					.then(function(response) {
+						if (response && response.error) {
+							alert('Something went wrong...');
+						}	
+						viewModel.organizationWidget.updateOrganization.processing = false;
+					});
+			},
 			deleteOrganization: {
 				dialog: function() {
 					ngDialog.open({
@@ -247,7 +257,18 @@
 				}
 			},
 			updateUserRole: function(user) {
-				console.log('update ' + user._user._id + ' to ' + user.role);	
+				console.log('update ' + user._user._id + ' to ' + user.role);
+				viewModel.organizationWidget.updateUserRole.processing = true;
+				api.updateRole(organizationId, {
+					userId: user._user._id,
+					role: user.role
+				})
+					.then(function(response) {
+						if (response && !response.error) {
+							alert('Something went wrong...');
+						}
+						viewModel.organizationWidget.updateUserRole.processing = false;	
+					});
 			}
 		};
 	}

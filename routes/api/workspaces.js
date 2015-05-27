@@ -69,19 +69,20 @@ router.route('/:organizationId')
                     response.json(workspaceId);
             });
         });
-    });
+    })
     
-    // .put(function(request, response, next) {
-    //     organizationService.update(
-    //         request.params.organizationId, request.body, function(error) {
-    //             if (error) {
-    //                 return response.status(500).json({ 
-    //                     error: 'Failed to update the organization'
-    //                 });
-    //             }
-    //             response.json({ success: true });    
-    //     });
-    // })
+    .put(function(request, response, next) {
+        workspaceService.update(
+            request.params.organizationId, request.body.userId, request.body.role, 
+            function(error, workspaceId) {
+                if (error) {
+                    return response.status(500).json({ 
+                        error: 'Failed to update user workspace'
+                    });
+                }
+                response.json({ success: true });
+        });
+    });
     
     // .delete(function(request, response, next) {
     //     organizationService.delete(

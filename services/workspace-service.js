@@ -3,20 +3,6 @@ var Workspace = require('../models/WorkspaceSchema').Workspace,
 	
 var parseError = mongooseUtil.parseError;
 
-exports.add = function(userId, organizationId, role, next) {
-	Workspace.create({
-		_user: userId,
-		_organization: organizationId, 
-		role: role
-		}, function(error, workspace) {
-			
-			if (error) {
-				return next(parseError(error));
-			}
-			next(null, workspace._id);
-	});
-};
-
 exports.getAllByUser = function(userId, next) {
 	Workspace
 		.find({_user: userId})
@@ -58,5 +44,32 @@ exports.getRole = function(organizationId, userId, next) {
 				next(parseError(error));
 			}
 			next(null, role);
+		});
+};
+
+exports.add = function(userId, organizationId, role, next) {
+	Workspace.create({
+		_user: userId,
+		_organization: organizationId, 
+		role: role
+		}, function(error, workspace) {
+			
+			if (error) {
+				return next(parseError(error));
+			}
+			next(null, workspace._id);
+	});
+};
+
+exports.update = function(organizationId, userId, role, next) {
+	Workspace
+		.update({
+			_organization: organizationId,
+			_user: userId
+		}, { $set: { role: role }}, function(error) {
+			if (error) {
+				return next(parseError(error));
+			}
+			next();	
 		});
 };

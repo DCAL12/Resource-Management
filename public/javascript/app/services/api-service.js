@@ -62,6 +62,11 @@
 					.then(respond, giveReason)
 					.catch(error);
 			},
+			updateRole: function(organizationId, data) {
+				return $http.put(apiPaths.workspaces + organizationId, data)
+					.then(respond, giveReason)
+					.catch(error);
+			},
 			
 			// Request API
 			getRequests: function(organizationId) {

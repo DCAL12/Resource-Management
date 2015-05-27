@@ -235,7 +235,7 @@
 	
 	<h4>Organization Info</h4>
 	
-	<table>
+	<table ng-if="viewModel.role !== 'owner'">
 		
 		<tr>
 			<td>Name</td>
@@ -247,6 +247,11 @@
 			<td ng-bind="viewModel.organization.description"></td>
 		</tr>
 		
+		<tr ng-if="viewModel.role === 'manager' || viewModel.role === 'owner'">
+			<td>Default Access</td>
+			<td ng-bind="viewModel.organization.settings.defaultAccess"></td>
+		</tr>
+		
 		<tr>
 			<td>Role Manager</td>
 			<td>
@@ -256,14 +261,95 @@
 		</tr>
 	</table>
 	
-	<p ng-if="viewModel.role === 'owner'"
-		class="action"
+	<!-- Owners Can Update Organization Details and Settings -->
+	<form ng-if="viewModel.role === 'owner'"
+		name="updateOrganization"
+		method="post" 
+		novalidate
+		ng-submit="updateOrganization.$valid && 
+			viewModel.organizationWidget.updateOrganization()">
+		
+		<table>
+			<tr>
+				<td>Name</td>
+				<td>
+					<input type="text"
+						name="name"
+						ng-model="viewModel.organization.name"
+						required>
+				</td>
+			</tr>
+			
+			<tr>
+				<td>Description</td>
+				<td>
+					<input type="text"
+						name="description"
+						ng-model="viewModel.organization.description"
+						required>
+				</td>
+			</tr>
+			
+			<tr>
+				<td>Default Access</td>
+				<td>
+					<select 
+						id="defaultAccess" 
+						name="defaultAccess" 
+						form="updateOrganization"
+						ng-model="viewModel.organization.settings.defaultAccess"
+						required>
+							<option value="viewModel.organization.settings.defaultAccess" 
+								ng-bind="viewModel.organization.settings.defaultAccess">
+							</option>
+							<option ng-if="viewModel.organization.settings.defaultAccess !== 'viewer'">
+								viewer
+							</option>
+							<option ng-if="viewModel.organization.settings.defaultAccess !== 'requestor'">
+								requestor
+							</option>
+					</select>
+				</td>
+			</tr>
+			
+			<tr>
+				<td>Role Manager</td>
+				<td>
+					<input type="text"
+						name="roleManager"
+						ng-model="viewModel.organization.settings.roleManager">
+				</td>
+			</tr>
+		</table>
+		
+		<input type="submit" value="update">
+		<span ng-show="viewModel.organizationWidget.updateOrganization.processing">
+	    	Processing...
+	    </span>
+	    
+	    <div class="status" ng-show="updateOrganization.$submitted">
+	    	<ul>
+	    		<li 
+	    			class="error" 
+	    			ng-show="updateOrganization.name.$error.required">
+	    			A unique organization name is required
+	    		</li>
+	    		<li 
+	    			class="error" 
+	    			ng-show="updateOrganization.description.$error.required">
+	    			A brief description is required
+	    		</li>
+	    	</ul>
+	    </div>
+		
+		<p class="action"
 		ng-click="viewModel
 			.organizationWidget
 			.deleteOrganization
 			.dialog()">
 		delete organization
-	</p>
+		</p>
+	</form>
 	
 	<div ng-if="viewModel.role === 'manager'|| viewModel.role === 'owner'">
 		

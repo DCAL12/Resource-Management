@@ -32,6 +32,17 @@ exports.add = function(data, next) {
 	});
 };
 
+exports.update = function(organizationId, update, next) {
+	Organization
+		.findByIdAndUpdate(organizationId, update)
+		.exec(function(error) {
+			if (error) {
+				return next(parseError(error));
+			}
+			next();
+		});	
+};
+
 exports.delete = function(organizationId, next) {
 	Organization
 		.findByIdAndRemove(organizationId)

@@ -65,6 +65,7 @@ router.route('/:organizationId?')
         organizationService.update(
             request.params.organizationId, request.body, function(error) {
                 if (error) {
+                    console.log(error);
                     return response.status(500).json({ 
                         error: 'Failed to update the organization'
                     });
