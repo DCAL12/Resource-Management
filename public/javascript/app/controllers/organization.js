@@ -61,26 +61,26 @@
 				},
 				submit: function() {
 					
-					var newRequest = viewModel.requestWidget.createRequest.data;
 					
+					console.log(viewModel.requestWidget.createRequest.data);
 					viewModel.requestWidget.createRequest.processing = true;
-					api.addRequest(organizationId, newRequest)
-						.then(function(response) {
-							
-							if (response && response.error) {
-								alert('Something went wrong...');
-							}
-							else {
-								// temporary placeholder; will be filled in by 
-								// with real data on next refresh
-								newRequest._createdBy = {};
-								newRequest._createdBy.email = 'me';
-								newRequest.createdTime = 'just now';
-								viewModel.requests.push(viewModel.requestWidget.createRequest.data);	
-							}
-							viewModel.requestWidget.createRequest.processing = false;
-							viewModel.requestWidget.createRequest.data = null;
-						});
+					api.addRequest(organizationId, 
+						viewModel.requestWidget.createRequest.data)
+							.then(function(response) {
+								
+								if (response && response.error) {
+									alert('Something went wrong...');
+								}
+								else {
+									alert('Your request has been submitted');
+									api.getRequest(organizationId, response)
+										.then(function(result) {
+											viewModel.requests.push(result);
+										});
+								}
+								viewModel.requestWidget.createRequest.processing = false;
+								viewModel.requestWidget.createRequest.data = null;
+							});
 					ngDialog.close();
 				}
 			},
@@ -239,15 +239,13 @@
 					});
 				},
 				submit: function() {
-					console.log('Adding User Role');
-					console.log(viewModel.organizationWidget.addUserRole.data);
 					viewModel.organizationWidget.addUserRole.processing = true;
 					api.addRole(
 						organizationId, 
 						viewModel.organizationWidget.addUserRole.data)
 							.then(function(response) {
 								
-								if (response && !response.error) {
+								if (response && response.error) {
 									alert('Something went wrong...');
 								}
 								viewModel.organizationWidget.addUserRole.processing = false;
@@ -263,7 +261,7 @@
 					role: user.role
 				})
 					.then(function(response) {
-						if (response && !response.error) {
+						if (response && response.error) {
 							alert('Something went wrong...');
 						}
 						viewModel.organizationWidget.updateUserRole.processing = false;	

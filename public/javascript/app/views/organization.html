@@ -54,56 +54,49 @@
 			viewModel.role === 'owner'"
 	ng-show="viewModel.tab.activeTab === 'requests'">
 	
-	<h4>Requests</h4>
+	<div ng-if="viewModel.role === 'manager' || 
+			viewModel.role === 'owner'">
+		
+		<h4>Requests</h4>
 	
-	<strong ng-show="!viewModel.requests">loading...</strong>
-	<strong ng-show="viewModel.requests.length === 0">there are no requests</strong>
+		<strong ng-show="!viewModel.requests">loading...</strong>
+		<strong ng-show="viewModel.requests.length === 0">there are no requests</strong>
+		
+		<table ng-show="viewModel.requests && viewModel.requests.length > 0">
+			<tr>
+				<th>Resource Type</th>
+				<th>QTY</th>
+				<th>Start</th>
+				<th>End</th>
+				<th>Comments</th>
+				<th>Requestor</th>
+				<th>Submitted</th>
+				<th>Status</th>
+			</tr>
+			<tr ng-repeat="request in viewModel.requests"
+				ng-class="{even: $even, odd: $odd}">
+				<td ng-bind="request._resourceType.type"></td>
+				<td ng-bind="request.quantity"></td>
+				<td ng-bind="request.startDate"></td>
+				<td ng-bind="request.endDate"></td>
+				<td ng-bind="request.comments"></td>
+				<td ng-bind="request._createdBy.email"></td>
+				<td ng-bind="request.createdTime"></td>
+				
+				<td ng-if="viewModel.role === 'manager'|| viewModel.role === 'owner'">
+					<select
+						ng-model="request.status"
+						ng-change="viewModel.requestWidget.updateRequest(request)">
+							<option>pending</option> 
+							<option>approved</option>
+							<option>denied</option>
+							<option>cancelled</option>
+					</select>
+				</td>
+			</tr>
+		</table>	
+	</div>
 	
-	<table ng-show="viewModel.requests && viewModel.requests.length > 0">
-		<tr>
-			<th>Resource Type</th>
-			<th>QTY</th>
-			<th>Description</th>
-			<th>Start</th>
-			<th>End</th>
-			<th>Location</th>
-			<th>Requestor</th>
-			<th>Submitted</th>
-			<th>Status</th>
-		</tr>
-		<tr ng-repeat="request in viewModel.requests"
-			ng-class="{even: $even, odd: $odd}">
-			<td ng-bind="request._resourceType.type"></td>
-			<td ng-bind="request.quantity"></td>
-			<td ng-bind="request.description"></td>
-			<td ng-bind="request.startTime"></td>
-			<td ng-bind="request.endTime"></td>
-			<td ng-bind="request.location"></td>
-			<td ng-bind="request._createdBy.email"></td>
-			<td ng-bind="request.createdTime"></td>
-			
-			<td ng-if="viewModel.role === 'manager'|| viewModel.role === 'owner'">
-				<select
-					ng-model="request.status"
-					ng-change="viewModel.requestWidget.updateRequest(request)">
-						<option>pending</option> 
-						<option>approved</option>
-						<option>denied</option>
-						<option>cancelled</option>
-				</select>
-			</td>
-			
-			<td ng-if="viewModel.role === 'requestor' ||
-	        			viewModel.role === 'manager' || 
-	        			viewModel.role === 'owner'"
-	        	ng-bind="request.status"></td>
-	        <td ng-if="viewModel.role === 'requestor'">
-	        	<button ng-click="viewModel.requestWidget.cancelRequest(request)">
-	        		cancel
-	        	</button>
-	        </td>
-		</tr>
-	</table>
 	
 	<ul class="action">
 		<li	ng-click="viewModel
@@ -323,15 +316,8 @@
 						form="updateOrganization"
 						ng-model="viewModel.organization.settings.defaultAccess"
 						required>
-							<option value="viewModel.organization.settings.defaultAccess" 
-								ng-bind="viewModel.organization.settings.defaultAccess">
-							</option>
-							<option ng-if="viewModel.organization.settings.defaultAccess !== 'viewer'">
-								viewer
-							</option>
-							<option ng-if="viewModel.organization.settings.defaultAccess !== 'requestor'">
-								requestor
-							</option>
+							<option>viewer</option>
+							<option>requestor</option>
 					</select>
 				</td>
 			</tr>

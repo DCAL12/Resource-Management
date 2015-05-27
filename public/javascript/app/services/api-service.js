@@ -74,6 +74,14 @@
 					.then(respond, giveReason)
 					.catch(error);
 			},
+			getRequest: function(organizationId, requestId) {
+				return $http.get(apiPaths.requests 
+					+ organizationId
+					+'/'
+					+ requestId)
+						.then(respond, giveReason)
+						.catch(error);
+			},
 			addRequest: function(organizationId, data) {
 				return $http.post(apiPaths.requests + organizationId, data)
 					.then(respond, giveReason)

@@ -19,10 +19,6 @@ var requestSchema = new Schema({
 		default: 1,
 		min: 1
 	},
-	description: {
-		type: String, 
-		required: 'A description is required'
-	},
 	startDate: {
 		type: Date, 
 		required: 'Start time is required'
@@ -31,9 +27,8 @@ var requestSchema = new Schema({
 		type: Date, 
 		required: 'End time is required'
 	},
-	location: {
-		type: String,
-		required: 'A location is required'
+	comments: {
+		type: String
 	},
 	_createdBy: {
 		type: ObjectId,
@@ -48,7 +43,6 @@ var requestSchema = new Schema({
 		enum: [
 			'pending', 
 			'approved',
-			'approved with modification',
 			'denied',
 			'cancelled'
 		],

@@ -29,19 +29,7 @@
 						id="quantity" 
 						name="quantity" 
 						ng-model="viewModel.requestWidget.createRequest.data.quantity" 
-						required>
-				</td>
-			</tr>
-
-			<tr>
-				<td>
-					<label for="description">Description</label>
-				</td>
-				<td>
-					<input type="text" 
-						id="description" 
-						name="description" 
-						ng-model="viewModel.requestWidget.createRequest.data.description" 
+						min=1
 						required>
 				</td>
 			</tr>
@@ -71,19 +59,19 @@
 						required>
 				</td>
 			</tr>
-
+			
 			<tr>
 				<td>
-					<label for="location">Location</label>
+					<label for="comments">Comments</label>
 				</td>
 				<td>
 					<input type="text" 
-						id="location" 
-						name="location" 
-						ng-model="viewModel.requestWidget.createRequest.data.location" 
-						required>
+						id="comments" 
+						name="comments" 
+						ng-model="viewModel.requestWidget.createRequest.data.comments">
 				</td>
 			</tr>
+			
 		</table>
 
 		<input type="submit" value="Submit">
@@ -93,11 +81,14 @@
 
 		<div class="status" ng-show="createRequest.$submitted">
 			<ul>
-				<li class="error" ng-show="createRequest.name.$error.required">
-					A unique organization name is required
+				<li class="error" ng-show="createRequest.quantity.$error.required">
+					a quantity is required
 				</li>
-				<li class="error" ng-show="createRequest.description.$error.required">
-					A brief description is required
+				<li class="error" ng-show="createRequest.startDate.$error.required">
+					a start date is required
+				</li>
+				<li class="error" ng-show="createRequest.endDate.$error.required">
+					an end date is required
 				</li>
 			</ul>
 		</div>
