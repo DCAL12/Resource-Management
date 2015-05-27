@@ -51,8 +51,6 @@ resourceTypeSchema.statics.createWithCollectionName = function(resourceType, nex
 			});
 			resourceType.save(function(error) {
 				if (error) {
-					console.log('ERROR 2');
-					console.log(error);
 					return next(error);
 				}
 				next(null, resourceType._id);
@@ -60,6 +58,35 @@ resourceTypeSchema.statics.createWithCollectionName = function(resourceType, nex
 		});
 	});	
 };
+
+// Get the model (virtual)
+resourceTypeSchema.virtual('getModel').get(function() {
+	var thisDocument = this;
+
+	// Return the existing model if it's already been created
+	if (Object
+			.keys(mongoose.connection.models)
+			.some(function(model) {
+				return model === thisDocument.collectionName;
+		})) {
+		return mongoose.connection.model(thisDocument.collectionName);		
+	}
+	
+	return createModel(thisDocument);
+});
+
+resourceTypeSchema.statics.updateModel = function(resourceType) {
+	
+	delete mongoose.connection.models[resourceType.collectionName];
+	createModel(resourceType);
+};
+
+function createModel(document) {
+	var newSchema = new Schema(schemaGenerator
+		.convert(document.jsonAttributes));
+	
+	return mongoose.model(document.collectionName, newSchema);	
+}
 
 // Helper for schemaGenerator
 resourceTypeSchema.virtual('jsonAttributes').get(function(next) {
@@ -75,32 +102,6 @@ resourceTypeSchema.virtual('jsonAttributes').get(function(next) {
 	});
 	
 	return attributesJSON;
-});
-
-// Get the model (virtual)
-resourceTypeSchema.virtual('model').get(function(next) {
-	var thisDocument = this,
-		newSchema = null;
-
-	// Return the existing model if it's already been created
-	if (Object
-			.keys(mongoose.connection.models)
-			.some(function(model) {
-				return model === thisDocument.collectionName;
-		})) {
-			return mongoose.connection.model(thisDocument.collectionName);		
-		}
-	
-	// Create a new model
-	newSchema = new Schema(schemaGenerator
-		.convert(thisDocument.jsonAttributes));
-		
-	if (!newSchema) {
-		console.log('invalid schema');
-		return next('Invalid schema definition');
-	}
-	
-	return mongoose.model(thisDocument.collectionName, newSchema);
 });
 
 var ResourceType = mongoose.model('ResourceType', resourceTypeSchema);

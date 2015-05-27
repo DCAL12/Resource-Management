@@ -9,7 +9,6 @@ router.use(restrictRoute);
 
 router.route('/attributes/:resourceTypeId/:attributeId?')
     .put(function(request, response, next) {
-        console.log(request.params.resourceTypeId);
         resourceTypeService.attributeService.add(
             request.params.resourceTypeId, 
             request.body, 

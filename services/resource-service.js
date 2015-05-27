@@ -13,7 +13,7 @@ exports.getByResourceTypeIdAndResourceId = function(resourceTypeId, resourceId, 
 				return next(parseError(error));
 			}
 			
-			Resource = resourceType.model;
+			Resource = resourceType.getModel;
 			Resource
 				.findById(resourceId)
 				.exec(function(error, resource) {
@@ -35,7 +35,7 @@ exports.getByResourceTypeId = function(resourceTypeId, next) {
 				return next(parseError(error));
 			}
 			
-			Resource = resourceType.model;
+			Resource = resourceType.getModel;
 			Resource
 				.find()
 				.exec(function(error, resources) {
@@ -48,6 +48,7 @@ exports.getByResourceTypeId = function(resourceTypeId, next) {
 };
 
 exports.add = function(resourceTypeId, resource, next) {
+	
 	ResourceType
 		.findById(resourceTypeId)
 		.exec(function(error, resourceType) {
@@ -57,12 +58,12 @@ exports.add = function(resourceTypeId, resource, next) {
 				return next(parseError(error));
 			}
 			
-			Resource = resourceType.model;
-			Resource.create(resource, function(error, resource) {
+			Resource = resourceType.getModel;
+			Resource.create(resource, function(error, createdResource) {
 				if(error) {
 					return next(parseError(error));
 				}
-				next(null, resource._id);
+				next(null, createdResource._id);
 			});
 		});
 };
@@ -77,7 +78,7 @@ exports.update = function(resourceTypeId, resourceId, data, next) {
 				return next(parseError(error));
 			}
 			
-			Resource = resourceType.model;
+			Resource = resourceType.getModel;
 			Resource
 				.findByIdAndUpdate(resourceId, data)
 				.exec(function(error) {
@@ -99,7 +100,7 @@ exports.delete = function(resourceTypeId, resourceId, next) {
 				return next(parseError(error));
 			}
 			
-			Resource = resourceType.model;
+			Resource = resourceType.getModel;
 			Resource
 				.findByIdAndRemove(resourceId)
 				.exec(function(error) {

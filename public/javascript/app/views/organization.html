@@ -37,6 +37,7 @@
 	</div>
 </header>
 
+<!--TIMELINE-->
 <section 
 	ng-if="viewModel.role === 'manager'|| viewModel.role === 'owner'"
 	ng-show="viewModel.tab.activeTab === 'timeline'">
@@ -46,6 +47,7 @@
 
 </section>
 
+<!--REQUESTS-->
 <section 
 	ng-if="viewModel.role === 'requestor' ||
 			viewModel.role === 'manager' || 
@@ -114,6 +116,7 @@
 	
 </section>
 
+<!--RESOURCES-->
 <section ng-show="viewModel.tab.activeTab === 'resources'">
 	
 	<h4 ng-if="viewModel.role === 'manager'|| viewModel.role === 'owner'">
@@ -132,6 +135,7 @@
 	<ul ng-if="viewModel.role === 'manager'|| viewModel.role === 'owner'"
 		class="action">
 		
+		<!--selecting a resource type will show relevant info for that type-->
 		<li ng-show= "viewModel.resourceTypes.length > 0">
 			<select
 			 	ng-options="resourceType as resourceType.type for resourceType in viewModel.resourceTypes"
@@ -157,11 +161,25 @@
 			add an attribute
 		</li>	
 	</ul>
+	
+	<!--only show a list of available resource types to viewers and requestors-->
+	<div ng-if="viewModel.role === 'viewer'|| viewModel.role === 'requestor'">
+		<ul >
+			<li ng-repeat="resourceType in viewModel.resourceTypes"
+				ng-bind="resourceType.type"></li>
+		</ul>
 		
-	<ul ng-if="viewModel.role === 'viewer'|| viewModel.role === 'requestor'">
-		<li ng-repeat="resourceType in viewModel.resourceTypes"
-			ng-bind="resourceType.type"></li>		
-	</ul>
+		<p ng-if="viewModel.role === 'viewer'">
+			<em>you do not have permission to submit requests
+				<span ng-if="viewModel.organization.settings.roleManager">
+					&nbsp; | &nbsp;
+					<a ng-href="mailto:{{viewModel.organization.settings.roleManager}}">
+						request access
+					</a>
+				</span>
+			</em>
+		</p>	
+	</div>	
 	
 	<div ng-if="viewModel.role === 'manager'|| viewModel.role === 'owner'"
 		ng-show= "viewModel.resourceTypes.selected">
@@ -236,6 +254,7 @@
 	
 </section>
 
+<!--ORGANIZATION INFO/SETTINGS-->
 <section ng-show="viewModel.tab.activeTab === 'organization'">
 	
 	<h4>Organization Info</h4>
@@ -356,6 +375,7 @@
 		</p>
 	</form>
 	
+	<!--owners and managers can manage user roles-->
 	<div ng-if="viewModel.role === 'manager'|| viewModel.role === 'owner'">
 		
 		<h5>Manage Roles</h5>

@@ -71,6 +71,9 @@ exports.attributeService = {
 					if (error) {
 						return next(parseError(error));
 					}
+					
+					ResourceType.updateModel(resourceType);
+					
 					attributeId = resourceType.attributes[resourceType
 						.attributes.length - 1]._id;
 					next(null, attributeId);

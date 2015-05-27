@@ -46,8 +46,7 @@
 				
 				if (resourceTypes && resourceTypes.length > 0) {
 					viewModel.resourceTypes = resourceTypes;
-					viewModel.resourceTypes.selected = resourceTypes[0];
-					viewModel.resourceWidget.selectType(viewModel.resourceTypes.selected);	
+					viewModel.resourceWidget.selectType(resourceTypes[0]);	
 				}
 			});
 			
@@ -108,7 +107,7 @@
 			
 		viewModel.resourceWidget = {
 			selectType: function(resourceType) {
-				
+				viewModel.resourceTypes.selected = resourceType;
 				viewModel.resources = null;
 				
 				api.getResources(organizationId, resourceType._id)
@@ -137,18 +136,17 @@
 								
 								viewModel.resourceWidget.createResourceType.processing = false;
 								viewModel.resourceTypes.push(viewModel.resourceWidget.createResourceType.data);
-								viewModel.resourceTypes.selected = viewModel.resourceWidget.createResourceType.data;
 								viewModel.resourceWidget.createResourceType.data = null;
 								
 								// Select the newly created resourceType for editing
+								
 								api.getResourceTypeByID(organizationId, response)
 									.then(function(response) {
 										
 										if (response && response.error) {
 											alert('Something went wrong...');
 										}
-										
-										viewModel.resourceWidget.selectType(response);	
+										viewModel.resourceWidget.selectType(response);
 									});
 							});
 							ngDialog.close();
@@ -164,6 +162,7 @@
 				},
 				submit: function() {
 					viewModel.resourceWidget.addAttribute.processing = true;
+					
 					api.addResourceTypeAttribute(
 						viewModel.resourceTypes.selected._id, 
 						viewModel.resourceWidget.addAttribute.data)
