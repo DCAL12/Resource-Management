@@ -23,11 +23,11 @@ var requestSchema = new Schema({
 		type: String, 
 		required: 'A description is required'
 	},
-	startTime: {
+	startDate: {
 		type: Date, 
 		required: 'Start time is required'
 	},
-	endTime: {
+	endDate: {
 		type: Date, 
 		required: 'End time is required'
 	},

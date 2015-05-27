@@ -11,8 +11,11 @@
 					<label for="resourceType">Resource Type</label>
 				</td>
 				<td>
-					<select id="resourceType" name="resourceType" ng-options="resourceType._id as resourceType.type for resourceType in viewModel.resourceTypes" ng-model="viewModel.requestWidget.createRequest.data._resourceType">
-						<option value="">--select a resource type--</option>
+					<select id="resourceType" 
+						name="resourceType" 
+						ng-options="resourceType._id as resourceType.type for resourceType in viewModel.resourceTypes" 
+						ng-model="viewModel.requestWidget.createRequest.data._resourceType">
+							<option value="">--select a resource type--</option>
 					</select>
 				</td>
 			</tr>
@@ -22,7 +25,11 @@
 					<label for="quantity">Quantity</label>
 				</td>
 				<td>
-					<input type="number" id="quantity" name="quantity" ng-model="viewModel.requestWidget.createRequest.data.quantity" required>
+					<input type="number" 
+						id="quantity" 
+						name="quantity" 
+						ng-model="viewModel.requestWidget.createRequest.data.quantity" 
+						required>
 				</td>
 			</tr>
 
@@ -31,25 +38,37 @@
 					<label for="description">Description</label>
 				</td>
 				<td>
-					<input type="text" id="description" name="description" ng-model="viewModel.requestWidget.createRequest.data.description" required>
+					<input type="text" 
+						id="description" 
+						name="description" 
+						ng-model="viewModel.requestWidget.createRequest.data.description" 
+						required>
 				</td>
 			</tr>
 
 			<tr>
 				<td>
-					<label for="startTime">Start Time</label>
+					<label for="startTime">Start Date</label>
 				</td>
 				<td>
-					<input type="datetime" id="startTime" name="startTime" ng-model="viewModel.requestWidget.createRequest.data.startTime" required>
+					<input type="date" 
+						id="startDate" 
+						name="startDate" 
+						ng-model="viewModel.requestWidget.createRequest.data.startDate" 
+						required>
 				</td>
 			</tr>
 
 			<tr>
 				<td>
-					<label for="endTime">End Time</label>
+					<label for="endTime">End Date</label>
 				</td>
 				<td>
-					<input type="datetime" id="endTime" name="endTime" ng-model="viewModel.requestWidget.createRequest.data.endTime" required>
+					<input type="date" 
+						id="endDate" 
+						name="endDate" 
+						ng-model="viewModel.requestWidget.createRequest.data.endDate" 
+						required>
 				</td>
 			</tr>
 
@@ -58,7 +77,11 @@
 					<label for="location">Location</label>
 				</td>
 				<td>
-					<input type="text" id="location" name="location" ng-model="viewModel.requestWidget.createRequest.data.location" required>
+					<input type="text" 
+						id="location" 
+						name="location" 
+						ng-model="viewModel.requestWidget.createRequest.data.location" 
+						required>
 				</td>
 			</tr>
 		</table>
