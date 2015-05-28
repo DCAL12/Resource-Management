@@ -1,8 +1,8 @@
 <header>
 	<h2>{{title}}</h2> 
 	
-	{{#if statusMessage}} {{!-- status will be null, 'Success', or 'Error' --}}
-        <p class="{{status}}"><strong>{{status}}:&nbsp</strong>{{statusMessage}}</p>
+	{{#if status.message}} {{!-- status will be null, 'Success', or 'Error' --}}
+        <p class="{{status.label}}"><strong>{{status.label}}:&nbsp</strong>{{status.message}}</p>
     {{/if}}
 </header>
 

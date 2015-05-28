@@ -17,6 +17,16 @@ router.get('/', restrictRoute, function (request, response, next) {
     response.render('workspace/index', viewData);
 });
 
+// Get timeline beta
+router.get('/timeline-beta', restrictRoute, function(request, response, next) {
+    var viewData = {
+        title: 'Timeline (Beta)',
+        className: 'timeline',
+        user: request.user
+    };
+    response.render('workspace/timeline', viewData);    
+});
+
 // Get specific workspace page
 router.get('/org/:organizationId', function(request, response, next) {
     organizationService.findById(request.params.organizationId, 

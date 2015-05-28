@@ -15,7 +15,7 @@
 		viewModel.resourceTypes = [];
 		viewModel.tab = {
 			tabs: ['timeline', 'requests', 'resources', 'organization'],
-			activeTab: 'organization',
+			activeTab: 'timeline',
 			setActiveTab: function(tabName) {viewModel.tab.activeTab = tabName}
 		};
 			

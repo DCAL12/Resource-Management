@@ -11,6 +11,11 @@
 	        	Timeline
 	        </li>
 	        
+	        <li ng-if="viewModel.role === 'manager' || 
+	        			viewModel.role === 'owner'">
+	        	<a href="/workspace/timeline-beta">Timeline (beta)</a>
+	        </li>
+	        
 	        <li ng-if="viewModel.role === 'requestor' ||
 	        			viewModel.role === 'manager' || 
 	        			viewModel.role === 'owner'"
@@ -43,7 +48,7 @@
 	ng-show="viewModel.tab.activeTab === 'timeline'">
 	
 	<h4>Timeline</h4>
-	GUI for visually representing resources and requests on a timeline. 
+	<p><em>GUI for visually representing resources and requests on a timeline.</em></p>
 
 </section>
 
