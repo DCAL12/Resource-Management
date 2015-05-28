@@ -88,22 +88,24 @@ var canvas = function() {
 //
 //    });
         var r = new fabric.Rect({
-            left: 100,
-            top: 100,
-            width: 50,
-            height: 50,
+
+            width: 120,
+            height: 30,
             fill: '#faa',
-            originX: 'left',
-            originY: 'top',
+            originX: 'center',
+            originY: 'center',
             centeredRotation: true,
             lockRotation: true,
             hasRotatingPoint: false
         });
 
 // create a rectangle object
-        var t = new fabric.IText("Hello world !", {
+        var t = new fabric.IText("Truck", {
+
             backgroundColor: '#FFFFFF',
             fill: '#000000',
+            originX: 'center',
+            originY: 'center',
             fontSize: 12,
             top : 3
         });
@@ -111,12 +113,18 @@ var canvas = function() {
         var gp = new fabric.Group([ r, t ], {
             left: 100,
             top: 100,
+            width: 120,
+            height: 30,
+            hasBorders: true,
             lockScalingX: true,
             lockScalingY: true,
             hasRotatingPoint: false,
             transparentCorners: false,
             cornerSize: 7
         });
+
+
+canvas.add(gp);
         
         var square = new fabric.Rect(0,0,50,50);
 
