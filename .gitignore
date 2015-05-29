@@ -25,6 +25,7 @@ build/Release
 # Dependency directory
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
 node_modules
+public/bower
 
 # Test data directory
 test/data
@@ -34,3 +35,6 @@ test/data
 *.iml
 .git
 .c9
+
+# Development configs
+.bowerrc
